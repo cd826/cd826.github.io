@@ -1,0 +1,738 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="ios,swift,REST," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="重要说明: 这是一个系列教程，非本人原创，而是翻译国外的一个教程。本人也在学习Swift，看到这个教程对开发一个实际的APP非常有帮助，所以翻译共享给大家。原教程非常长，我会陆续翻译并发布，欢迎交流与分享。
+
+在Alamofire的GET与POST调用中使用强类型我们使用Alamofire进行REST请求。现在让我们清理一下，通过把JSON映射到强类型类，从而构建更高级别的抽象。这将使我们的代码">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS Apps with REST APIs(四)">
+<meta property="og:url" content="http://cd826.github.io/2016/06/17/appWithRest-4/index.html">
+<meta property="og:site_name" content="CD826Workshop">
+<meta property="og:description" content="重要说明: 这是一个系列教程，非本人原创，而是翻译国外的一个教程。本人也在学习Swift，看到这个教程对开发一个实际的APP非常有帮助，所以翻译共享给大家。原教程非常长，我会陆续翻译并发布，欢迎交流与分享。
+
+在Alamofire的GET与POST调用中使用强类型我们使用Alamofire进行REST请求。现在让我们清理一下，通过把JSON映射到强类型类，从而构建更高级别的抽象。这将使我们的代码">
+<meta property="og:updated_time" content="2016-06-13T15:49:36.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS Apps with REST APIs(四)">
+<meta name="twitter:description" content="重要说明: 这是一个系列教程，非本人原创，而是翻译国外的一个教程。本人也在学习Swift，看到这个教程对开发一个实际的APP非常有帮助，所以翻译共享给大家。原教程非常长，我会陆续翻译并发布，欢迎交流与分享。
+
+在Alamofire的GET与POST调用中使用强类型我们使用Alamofire进行REST请求。现在让我们清理一下，通过把JSON映射到强类型类，从而构建更高级别的抽象。这将使我们的代码">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> iOS Apps with REST APIs(四) | CD826Workshop </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?317a9862593d085ce8f8aa660d633b05";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">CD826Workshop</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Talk is cheap, show me the code.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                iOS Apps with REST APIs(四)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-06-17T22:10:00+08:00" content="2016-06-17">
+              2016-06-17
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/swift/" itemprop="url" rel="index">
+                    <span itemprop="name">swift</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/swift/REST/" itemprop="url" rel="index">
+                    <span itemprop="name">REST</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/06/17/appWithRest-4/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/17/appWithRest-4/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>重要说明: 这是一个系列教程，非本人原创，而是翻译国外的一个教程。本人也在学习Swift，看到这个教程对开发一个实际的APP非常有帮助，所以翻译共享给大家。原教程非常长，我会陆续翻译并发布，欢迎交流与分享。</p>
+</blockquote>
+<h2 id="在Alamofire的GET与POST调用中使用强类型"><a href="#在Alamofire的GET与POST调用中使用强类型" class="headerlink" title="在Alamofire的GET与POST调用中使用强类型"></a>在Alamofire的GET与POST调用中使用强类型</h2><p>我们使用<a href="https://github.com/Alamofire/Alamofire" target="_blank" rel="external">Alamofire</a>进行REST请求。现在让我们清理一下，通过把JSON映射到强类型类，从而构建更高级别的抽象。这将使我们的代码组织性更好，也使得我们不需要一次记住太多代码的细节。</p>
+<p>首先，我们需要构建一个类来处理<code>Post</code>对象的类。创建的类为了方便进行调试，需要具有以下几个属性，一个<code>Post</code>对象构造函数，一个描述方法可以打印出对象的所有属性：<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Post</span> </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> title:<span class="type">String</span>? </span><br><span class="line">  <span class="keyword">var</span> body:<span class="type">String</span>? </span><br><span class="line">  <span class="keyword">var</span> id:<span class="type">Int</span>?</span><br><span class="line">  <span class="keyword">var</span> userId:<span class="type">Int</span>?</span><br><span class="line">  <span class="keyword">required</span> <span class="keyword">init</span>?(aTitle: <span class="type">String</span>?, aBody: <span class="type">String</span>?, anId: <span class="type">Int</span>?, aUserId: <span class="type">Int</span>?) &#123; </span><br><span class="line">    <span class="keyword">self</span>.title = aTitle</span><br><span class="line">    <span class="keyword">self</span>.body = aBody</span><br><span class="line">    <span class="keyword">self</span>.id = anId</span><br><span class="line">    <span class="keyword">self</span>.userId = aUserId </span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">func</span> <span class="title">description</span><span class="params">()</span></span> -&gt; <span class="type">String</span> &#123; </span><br><span class="line">    <span class="keyword">return</span> <span class="string">"ID: \(self.id)"</span> +</span><br><span class="line">      <span class="string">"User ID: \(self.userId)"</span> + </span><br><span class="line">        <span class="string">"Title: \(self.title)\n"</span> + </span><br><span class="line">         <span class="string">"Body: \(self.body)\n"</span></span><br><span class="line">  &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>我们将使用路由器来创建URL请求。它可以装配请求信息，包括HTTP方法和URL，并在报头中附加相应的参数。在URL请求和JSON处理方面，我们不需要对路由做任何改变。它不需要知道<code>Post</code>对象的任何信息。</p>
+<p>接下来我们创建一个<code>PostRouter.swift</code>文件，作为我们的路由器：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Alamofire</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">PostRouter</span>: <span class="title">URLRequestConvertible</span> </span>&#123;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">let</span> baseURLString = <span class="string">"http://jsonplaceholder.typicode.com/"</span></span><br><span class="line">  </span><br><span class="line">  <span class="keyword">case</span> <span class="type">Get</span>(<span class="type">Int</span>)</span><br><span class="line">  <span class="keyword">case</span> <span class="type">Create</span>([<span class="type">String</span>: <span class="type">AnyObject</span>])</span><br><span class="line">  <span class="keyword">case</span> <span class="type">Delete</span>(<span class="type">Int</span>)</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">var</span> <span class="type">URLRequest</span>: <span class="type">NSMutableURLRequest</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> method: <span class="type">Alamofire</span>.<span class="type">Method</span> &#123;</span><br><span class="line">      <span class="keyword">switch</span> <span class="keyword">self</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> .<span class="type">Get</span></span><br><span class="line">          <span class="keyword">return</span> .<span class="type">GET</span></span><br><span class="line">        <span class="keyword">case</span> .<span class="type">Create</span></span><br><span class="line">          <span class="keyword">return</span> .<span class="type">POST</span></span><br><span class="line">        <span class="keyword">case</span> .<span class="type">Delete</span></span><br><span class="line">          <span class="keyword">return</span> .<span class="type">DELETE</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> result: (path: <span class="type">String</span>, parameters: [<span class="type">String</span>: <span class="type">AnyObject</span>]?) = &#123;</span><br><span class="line">      <span class="keyword">switch</span> <span class="keyword">self</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> .<span class="type">Get</span>(<span class="keyword">let</span> postNumber):</span><br><span class="line">          <span class="keyword">return</span> (<span class="string">"posts/\(postNumber)"</span>, <span class="literal">nil</span>)</span><br><span class="line">        <span class="keyword">case</span> .<span class="type">Create</span>(<span class="keyword">let</span> newPost):</span><br><span class="line">          <span class="keyword">return</span> (<span class="string">"posts"</span>, newPost)</span><br><span class="line">        <span class="keyword">case</span> .<span class="type">Delete</span>(<span class="keyword">let</span> postNumber)</span><br><span class="line">          <span class="keyword">return</span> (<span class="string">"posts/\(postNumber)"</span>, <span class="literal">nil</span>)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> <span class="type">URL</span> = <span class="type">NSURL</span>(string: <span class="type">PostRouter</span>.baseURLString)!</span><br><span class="line">    <span class="keyword">let</span> <span class="type">URLRequest</span> = <span class="type">NSURLRequest</span>(<span class="type">URL</span>: <span class="type">URL</span>.<span class="type">URLByAppendingPathComponent</span>(result.path))</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> encoding = <span class="type">Alamofire</span>.<span class="type">ParameterEncoding</span>.<span class="type">JSON</span></span><br><span class="line">    <span class="keyword">let</span> (encodedRequest, <span class="number">_</span>) = encoding.encode(<span class="type">URLRequest</span>, parameters: result.parameters)</span><br><span class="line">    </span><br><span class="line">    encodedRequest.<span class="type">HTTPMethod</span> = method.rawValue</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> encodedRequest;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当进行API调用时，我喜欢进行逆向工作。开始调用的时候，我们喜欢先搞清楚它们时怎么样工作的。首先，我们希望能够通过<code>ID</code>的值可以得到相应的帖子。</p>
+<p>我们可以在视图控制器的<code>viewWillAppear</code>方法中进行测试：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">viewWillAppear</span><span class="params">(animated: Bool)</span></span> &#123;</span><br><span class="line">  <span class="keyword">super</span>.viewWillAppear(animated)</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// MARK: 获取ID为1的Post</span></span><br><span class="line">  <span class="type">Post</span>.postByID(<span class="number">1</span>, completionHandler: &#123; result <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> error = result.error &#123;</span><br><span class="line">      <span class="comment">// 如果在调用中出现了错误，我们需要进行处理</span></span><br><span class="line">      <span class="built_in">print</span>(<span class="string">"调用/posts/1时出现错误"</span>)</span><br><span class="line">      <span class="built_in">print</span>(error)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">guard</span> <span class="keyword">let</span> post = result.value <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="built_in">print</span>(<span class="string">"调用/posts/1时出现错误：返回值为空"</span>)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 调用成功</span></span><br><span class="line">    <span class="built_in">print</span>(post.getDescription())</span><br><span class="line">    <span class="built_in">print</span>(post.title)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>postByID</code>有相应的完成处理程序。与前面所编写代码的不同是，我们不再用一个函数编写完成处理程序，而是在方法中直接进行处理。当我们实现<code>postByID</code>时我们将看到它们是如何工作的，以及当函数怎么样来调用完成处理程序来处理返回的结果。</p>
+<p>我们使用完成处理程序，可以让程序异步执行。这里你或许注意到整个程序中没有URL、没有请求，也没有JSON解析。它是由<code>Post</code>来完成，而不是在抽象的底层来处理。</p>
+<p>我们也希望能够新建一个<code>Post</code>，并将它发送到服务器。这里我们将<code>newPost.save</code>方法中使用尾随闭包来进行处理，所以我们可以在代码中删除<code>completionHandler</code>标签：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MARK: 保存</span></span><br><span class="line"><span class="comment">// 创建Post</span></span><br><span class="line"><span class="keyword">guard</span> <span class="keyword">let</span> newPost = </span><br><span class="line">  <span class="type">Post</span>(aTitle: <span class="string">"First Psot"</span>, aBody: <span class="string">"I iz first"</span>, anId: <span class="literal">nil</span>, aUserId: <span class="number">1</span>) <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">"错误: newPost不是一个Post对象"</span>)</span><br><span class="line">  <span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line">newPost.save &#123; result <span class="keyword">in</span></span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> error = result.error &#123;</span><br><span class="line">    <span class="comment">// 如果在调用中出现了错误，我们需要进行处理</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"调用 POST /posts时出现错误"</span>)</span><br><span class="line">    <span class="built_in">print</span>(error)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">guard</span> <span class="keyword">let</span> post = result.value <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"调用 POST /posts出现错误，返回值为空"</span>)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 调用成功</span></span><br><span class="line">  <span class="built_in">print</span>(post.description())</span><br><span class="line">  <span class="built_in">print</span>(post.title)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们这里将<code>Post</code>的创建和保存分开，创建(<code>Post(...)</code>)是在本地，而保存(<code>newPost.save(...)</code>)则是在服务器中执行。另外，这里将<code>Post</code>的<code>ID</code>设置为空，那是因为该值是由服务器进行分配的。</p>
+<p>接下来，我们对Alamofire进行设置，并看看<code>Post</code>的调用是如何来完成的。首先我们看看<code>GET</code>请求（这里我们已使用顺手的路由来创建URL请求）：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Alamofire</span>.request(<span class="type">PostRouter</span>.<span class="type">Get</span>(<span class="number">1</span>))</span><br><span class="line">  .responseJSON &#123; response <span class="keyword">in</span> </span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>使用<code>.responseObject</code>来代替<code>.responseJSON</code>会不会更好呢？Alamofire是允许我们自己定义响应序列化(response serializer)处理，这样我们就可以将API调用的结果转换成任何我们想要的。最直接的就是将返回的JSON序列化为一个对象。</p>
+<p>响应序列化可以将URL请求返还的结果转换为我们需要型式。默认的，URL请求的返回是一个NSData，但我们愿意使用JSON或者一个对象进行相关处理。</p>
+<p>要创建一个序列化对象，需要扩展<code>Alamofire.Request</code>。我们将新建一个文件，名称为：<code>AlamofireRequest+JSONSerializable.swift</code>。如下面所示，我们先将逐步了解它是如何运作的：<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Foundation</span><br><span class="line"><span class="keyword">import</span> Alamofire</span><br><span class="line"><span class="keyword">import</span> SwiftyJSON</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Alamofire</span>.<span class="title">Request</span> </span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">func</span> <span class="title">responseObject</span>&lt;T: ResponseJSONObjectSerializable&gt;<span class="params">(completionHandler:</span><br><span class="line">    Response&lt;T, NSError&gt; -&gt; Void)</span></span> -&gt; <span class="type">Self</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> serializer = <span class="type">ResponseSerializer</span>&lt;<span class="type">T</span>, <span class="type">NSError</span>&gt; &#123; request, response, data, error <span class="keyword">in</span></span><br><span class="line">      <span class="keyword">guard</span> error == <span class="literal">nil</span> <span class="keyword">else</span> &#123; </span><br><span class="line">        <span class="keyword">return</span> .<span class="type">Failure</span>(error!)</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">guard</span> <span class="keyword">let</span> responseData = data <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> failureReason = <span class="string">"无法进行对象序列化，因为输入的数据为空。"</span> </span><br><span class="line">        <span class="keyword">let</span> error = <span class="type">Error</span>.errorWithCode(.<span class="type">DataSerializationFailed</span>, failureReason:</span><br><span class="line">          failureReason) </span><br><span class="line">        <span class="keyword">return</span> .<span class="type">Failure</span>(error)</span><br><span class="line">      &#125;</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">let</span> <span class="type">JSONResponseSerializer</span> = <span class="type">Request</span>.<span class="type">JSONResponseSerializer</span>(options: .<span class="type">AllowFragments</span>) </span><br><span class="line">      <span class="keyword">let</span> result = <span class="type">JSONResponseSerializer</span>.serializeResponse(request, response,</span><br><span class="line">        responseData, error)</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">switch</span> result &#123;</span><br><span class="line">      <span class="keyword">case</span> .<span class="type">Success</span>(<span class="keyword">let</span> value):</span><br><span class="line">        <span class="keyword">let</span> json = <span class="type">SwiftyJSON</span>.<span class="type">JSON</span>(value) </span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> object = <span class="type">T</span>(json: json) &#123;</span><br><span class="line">          <span class="keyword">return</span> .<span class="type">Success</span>(object) </span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          <span class="keyword">let</span> failureReason = <span class="string">"无法通过JSON创建对象。"</span></span><br><span class="line">          <span class="keyword">let</span> error = <span class="type">Error</span>.errorWithCode(.<span class="type">JSONSerializationFailed</span>, failureReason:</span><br><span class="line">            failureReason) </span><br><span class="line">          <span class="keyword">return</span> .<span class="type">Failure</span>(error)</span><br><span class="line">        &#125;</span><br><span class="line">      <span class="keyword">case</span> .<span class="type">Failure</span>(<span class="keyword">let</span> error):</span><br><span class="line">        <span class="keyword">return</span> .<span class="type">Failure</span>(error) </span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> response(responseSerializer: serializer, completionHandler: completionHandler) </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>responseObject&lt;...&gt;(...)</code>作为<code>Alamofire.Request</code>的新的响应处理器。它与标准的<code>response</code>函数唯一的不同是，它使用了我们自定义的<code>responseSerializer</code>对返回数据进行序列化处理。因此，我们可以像下面这样来调用：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Alamofire</span>.request(<span class="type">PostRouter</span>.<span class="type">Get</span>(id))</span><br><span class="line">  .responseObject&#123; (response: <span class="type">Response</span>&lt;<span class="type">Post</span>, <span class="type">NSError</span>&gt;) <span class="keyword">in</span></span><br><span class="line">    <span class="comment">// Post相关处理</span></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>我们逐渐来了解<code>responseObject</code>这个函数。首先，我们从函数的声明开始：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Alamofire</span>.<span class="title">Request</span> </span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">func</span> <span class="title">responseObject</span>&lt;T: ResponseJSONObjectSerializable&gt;<span class="params">(completionHandler:</span><br><span class="line">    Response&lt;T, NSError&gt; -&gt; Void)</span></span> -&gt; <span class="type">Self</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>所定义的函数名称为：<code>responseObject</code>。<code>&lt;T&gt;</code>表示这是一个泛型方法，可以与不同类型的对象一起工作。<code>&lt;T: ResponseJSONObjectSerializable&gt;</code>表示，对象的类型必须实现<code>ResponseJSONObjectSeriablizable</code>协议(该协议是我们自己定义的)。定义这个协议，是为了能够让我们确定所传入对象的类型，必须实现一个参数是<code>JSON</code>的构造方法(init function)。</p>
+<p><code>responseObject</code>函数中使用唯一的参数为<code>completionHandler</code>。正如你所想的，当我们解析JSON并创建了对象后(也就是说作为当前函数的完成处理程序)就会调用它。这样我们就可以异步进行处理，而调用者也不用等待，当我们处理完毕后就会通知它。</p>
+<p>完成处理程序也是只有一个参数<code>Response&lt;T, NSErroe&gt;</code>。这是Alamofire3中定义的响应结构，它帮助我们处理了一大堆的事情，把处理结果包装成<code>Result</code>结构(里面是我们<code>T</code>对象和/或错误)，这样省去了我们过去处理<code>(NSURLRequest?, NSHTTPURLResponse?, Result&lt;T, NSError&gt;)</code>的一大堆工作。</p>
+<p>你可以把<code>Response</code>和<code>Result</code>结构想象成一个包，这个包中是我们从请求的响应中获取数据，并把它序列化为我们所使用的格式。这就像我们去买东西。支付后，你得到几样东西：你购买的东西、找零和收据，或者错误的信息，如你的“卡被拒绝“，或”还差8毛钱”等。所有这些就组合成了你购买时的响应。</p>
+<p>你也可以想象为不论交易是否成功，都会有购买的物品和/或者错误信息。</p>
+<p>Alamofire的这些结构是类似的。<code>Result</code>包含了<code>.Success</code>和<code>.Failure</code>，这样呢可以判断是否有错误。<code>Response</code>则封装了<code>Result</code>、你的原始请求及返回的原始数据。</p>
+<p><code>responseObject</code>返回了<code>Alamofire.Request</code>对象。<code>-&gt; Self</code>则是声明返回的类型。</p>
+<p>现在，我们来看一下`responseObject函数的结构：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">func</span> <span class="title">responseObject</span>&lt;T: ResponseJSONObjectSerializable&gt;<span class="params">(completionHandler:</span><br><span class="line">  Response&lt;T, NSError&gt; -&gt; Void)</span></span> -&gt; <span class="type">Self</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> serializer = <span class="type">ResponseSerializer</span>&lt;<span class="type">T</span>, <span class="type">NSError</span>&gt; &#123; (request, response, data, error) <span class="keyword">in</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> response(responseSerializer: serializer, completionHandler: completionHandler)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在<code>responseObject</code>中，我们创建了一个响应序列化处理器，并且与泛型<code>T</code>和<code>NSError</code>一起工作。该序列化处理器使用URL请求的返回<code>(request, response, data, error)</code>作为参数，使用Alamofire中定义的<code>Result</code>类型返回成功(包含已解析对象)或者失败(包含错误信息)。<code>responseObject</code>函数只是返回了我们刚刚创建的<code>responseSerializer</code>，并把参数的中的完成处理程序也返回，这样就可以在需要的地方使用了。</p>
+<p>现在，我们来看一下我们最终所实现的<code>responseSerializer</code>：<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> serializer = <span class="type">ResponseSerializer</span>&lt;<span class="type">T</span>, <span class="type">NSError</span>&gt; &#123; request, response, data, error <span class="keyword">in</span> </span><br><span class="line">  <span class="keyword">guard</span> error == <span class="literal">nil</span> <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> .<span class="type">Failure</span>(error!) </span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">guard</span> <span class="keyword">let</span> responseData = data <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> failureReason = <span class="string">"无法进行对象序列化，因为输入的数据为空。"</span></span><br><span class="line">    <span class="keyword">let</span> error = <span class="type">Error</span>.errorWithCode(.<span class="type">DataSerializationFailed</span>, failureReason: failureReason)    </span><br><span class="line">    <span class="keyword">return</span> .<span class="type">Failure</span>(error)</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">let</span> <span class="type">JSONResponseSerializer</span> = <span class="type">Request</span>.<span class="type">JSONResponseSerializer</span>(options: .<span class="type">AllowFragments</span>) </span><br><span class="line">  <span class="keyword">let</span> result = <span class="type">JSONResponseSerializer</span>.serializeResponse(request, response,</span><br><span class="line">    responseData, error)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">switch</span> result &#123;</span><br><span class="line">  <span class="keyword">case</span> .<span class="type">Success</span>(<span class="keyword">let</span> value):</span><br><span class="line">    <span class="keyword">let</span> json = <span class="type">SwiftyJSON</span>.<span class="type">JSON</span>(value) </span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> object = <span class="type">T</span>(json: json) &#123;</span><br><span class="line">      <span class="keyword">return</span> .<span class="type">Success</span>(object) </span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">let</span> failureReason = <span class="string">"无法通过JSON创建对象。"</span></span><br><span class="line">      <span class="keyword">let</span> error = <span class="type">Error</span>.errorWithCode(.<span class="type">JSONSerializationFailed</span>, failureReason:</span><br><span class="line">        failureReason) </span><br><span class="line">      <span class="keyword">return</span> .<span class="type">Failure</span>(error)</span><br><span class="line">    &#125;</span><br><span class="line">  <span class="keyword">case</span> .<span class="type">Failure</span>(<span class="keyword">let</span> error):</span><br><span class="line">    <span class="keyword">return</span> .<span class="type">Failure</span>(error) </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>自定义响应序列化处理首先使用<code>guard</code>进行数据有效性检查。然后使用SwiftyJSON将数据解析为JSON格式。接下来就是通过JSON数据来创建指定的对象：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> newObject = <span class="type">T</span>(json: json)</span><br></pre></td></tr></table></figure>
+<p>如果不能通过JSON数据创建响应的对象，那么我们将返回相应的错误。</p>
+<p>为了能够是序列化程序可以正常工作，我们需要定义一个<code>ResponseJSONObjectSerializable</code>协议：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">protocol</span> <span class="title">ResponseJSONObjectSerializable</span> </span>&#123;</span><br><span class="line">  <span class="keyword">init</span>?(json: <span class="type">SwiftyJSON</span>.<span class="type">JSON</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>定义该协议就是能够确保要转换的类必须实现了响应的构造函数。这也就告诉了泛型对象需要实现哪些处理。在现在这个例子中，类必须实现一个能够从JSON数据对象进行构造的方法。下面我们在<code>Post</code>类中实现它：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Post</span>: <span class="title">ResponseJSONObjectSerializable</span> </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> title:<span class="type">String</span>?</span><br><span class="line">  <span class="keyword">var</span> body:<span class="type">String</span>?</span><br><span class="line">  <span class="keyword">var</span> id:<span class="type">Int</span>?</span><br><span class="line">  <span class="keyword">var</span> userId:<span class="type">Int</span>?</span><br><span class="line">  </span><br><span class="line">  ...</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">required</span> <span class="keyword">init</span>?(json: <span class="type">SwiftyJSON</span>.<span class="type">JSON</span>) &#123;</span><br><span class="line">    <span class="keyword">self</span>.title = json[<span class="string">"title"</span>].string</span><br><span class="line">    <span class="keyword">self</span>.body = json[<span class="string">"body"</span>].string </span><br><span class="line">    <span class="keyword">self</span>.id = json[<span class="string">"id"</span>].int</span><br><span class="line">    <span class="keyword">self</span>.userId = json[<span class="string">"userId"</span>].int</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用SwiftyJSON可以是非常方便把JSON中的内容解析为<code>Post</code>对象的属性。</p>
+<p>现在我们就可以在<code>Post.postById()</code>中使用我们自定义的序列化了：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">class Post &#123;</span><br><span class="line">  ...</span><br><span class="line"> </span><br><span class="line">  // MARK: API调用</span><br><span class="line">  class func postByID(id: Int, completionHandler: (Result&lt;Post, NSError&gt;) -&gt; Void) ｛ </span><br><span class="line">    Alamofire.request(PostRouter.Get(id))</span><br><span class="line">      .responseObject &#123; (response: Response&lt;Post, NSError&gt;) in </span><br><span class="line">        completionHandler(response.result)</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这就是<code>GET</code>请求中所使用的了。现在我们就可以调用非常棒的<code>Post.postByID(1)</code>方法了。</p>
+<p>但，是的，还有其它的需求。我们说过我们需要实现<code>POST</code>请求，把新建<code>Post</code>保存到服务上。</p>
+<p>这种情况下，Alamofire中没有特别的限制要求，所以我们只需要保证可以把<code>Post</code>数据正确的序列化为API调用的格式即可。</p>
+<p>在<code>Post</code>类中，我们只需要实现一个方法可以将<code>Post</code>转换为键为字符串类型的<code>Dictionary</code>即可(为了方便我们称为<code>json</code>):<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">toJSON</span><span class="params">()</span></span> -&gt; <span class="type">Dictionary</span>&lt;<span class="type">String</span>, <span class="type">AnyObject</span>&gt; &#123; </span><br><span class="line">  <span class="keyword">var</span> json = <span class="type">Dictionary</span>&lt;<span class="type">String</span>, <span class="type">AnyObject</span>&gt;()</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> title = title &#123;</span><br><span class="line">    json[<span class="string">"title"</span>] = title</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> body = body &#123; </span><br><span class="line">    json[<span class="string">"body"</span>] = body</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> id = id &#123;</span><br><span class="line">    json[<span class="string">"id"</span>] = id</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> userId = userId &#123; </span><br><span class="line">    json[<span class="string">"userId"</span>] = userId</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> json</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>因为在<code>Alamofire.Request</code>中使用<code>Dictionary</code>作为参数类型，所以这里我们没有使用<code>NSDictionary</code>。</p>
+<p>下面我们来完成<code>Post</code>的<code>save()</code>方法：<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">save</span><span class="params">(completionHandler: <span class="params">(Result&lt;Post, NSError&gt;)</span></span></span> -&gt; <span class="type">Void</span>) &#123;</span><br><span class="line">  <span class="keyword">guard</span> <span class="keyword">let</span> fields:<span class="type">Dictionary</span>&lt;<span class="type">String</span>, <span class="type">AnyObject</span>&gt; = <span class="keyword">self</span>.toJSON() <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"error: error converting newPost fields to JSON"</span>)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="type">Alamofire</span>.request(<span class="type">PostRouter</span>.<span class="type">Create</span>(fields))</span><br><span class="line">    .responseObject &#123; (response: <span class="type">Response</span>&lt;<span class="type">Post</span>, <span class="type">NSError</span>&gt;) <span class="keyword">in</span> </span><br><span class="line">      completionHandler(response.result)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>嗯，就是这样了！现在我们可以很漂亮的获取和保存<code>Post</code>。更进一步的是，调用者也不需要知道<code>Post</code>是如何获取和保存。这样我们也可以很方便的将Alamofire替换为<a href="https://github.com/RestKit/RestKit" target="_blank" rel="external">RESTKit</a>，或者另外一个完全不同的API调用框架，并且还不用对视图控制器做任何改变。</p>
+<p>点击<a href="https://github.com/cmoulton/grokRouterAndStrongTypes" target="_blank" rel="external">这里</a> 获取本章代码。</p>
+<blockquote>
+<p>现在不需要担心如何解析复杂的JSON数据。先从最简单的字符串、数字和布尔字段开始。后面我们会对复杂的数据进行解析，如数组、日期等。你可以从简单的一两个需要自定义序列化的API调用开始，或者使用本章的代码。</p>
+</blockquote>
+<p>接下来我们将使用Alamofire来构建gists应用。我们构建我们所需要的API调用，并把结果显示到用户界面。用户界面包含一个表格视图，gists的详情页面，创建gists的表单页面及下拉刷新和滑动删除。最后我们讨论一下离线时该如何进行处理。 </p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ios/" rel="tag">#ios</a>
+          
+            <a href="/tags/swift/" rel="tag">#swift</a>
+          
+            <a href="/tags/REST/" rel="tag">#REST</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/06/15/appWithRest-3/" rel="next" title="iOS Apps with REST APIs(三)">
+                <i class="fa fa-chevron-left"></i> iOS Apps with REST APIs(三)
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/06/30/appWithRest-5/" rel="prev" title="iOS Apps with REST APIs(五)">
+                iOS Apps with REST APIs(五) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/06/17/appWithRest-4/"
+     data-title="iOS Apps with REST APIs(四)"
+     data-content=""
+     data-url="http://cd826.github.io/2016/06/17/appWithRest-4/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/06/17/appWithRest-4/"
+           data-title="iOS Apps with REST APIs(四)" data-url="http://cd826.github.io/2016/06/17/appWithRest-4/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpg"
+               alt="cd826Dong" />
+          <p class="site-author-name" itemprop="name">cd826Dong</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">15</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#在Alamofire的GET与POST调用中使用强类型"><span class="nav-number">1.</span> <span class="nav-text">在Alamofire的GET与POST调用中使用强类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">2.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">cd826Dong</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"cd826"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

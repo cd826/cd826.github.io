@@ -1,0 +1,801 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="ios,swift,REST," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="重要说明: 这是一个系列教程，非本人原创，而是翻译国外的一个教程。本人也在学习Swift，看到这个教程对开发一个实际的APP非常有帮助，所以翻译共享给大家。原教程非常长，我会陆续翻译并发布，欢迎交流与分享。
+
+自定义报头(Header)在Alamofire的请求中加入自定义报头(Header)有三种方式：第一种是通过Alamofire的管理器配置(Manager)为整个会话添加自定义报头(Hea">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS Apps with REST APIs(六)">
+<meta property="og:url" content="http://cd826.github.io/2016/07/02/appWithRest-6/index.html">
+<meta property="og:site_name" content="CD826Workshop">
+<meta property="og:description" content="重要说明: 这是一个系列教程，非本人原创，而是翻译国外的一个教程。本人也在学习Swift，看到这个教程对开发一个实际的APP非常有帮助，所以翻译共享给大家。原教程非常长，我会陆续翻译并发布，欢迎交流与分享。
+
+自定义报头(Header)在Alamofire的请求中加入自定义报头(Header)有三种方式：第一种是通过Alamofire的管理器配置(Manager)为整个会话添加自定义报头(Hea">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_070.png?imageView2/0/w/400">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_080.png?imageView2/0/w/400">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_090.png?imageView2/0/h/400">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_100.png?imageView2/0/h/400">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_110.png">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_120.png">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_130.png">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_140.png">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_150.png?imageView2/0/h/400">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_160.png?imageView2/0/h/400">
+<meta property="og:updated_time" content="2016-07-02T09:05:15.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS Apps with REST APIs(六)">
+<meta name="twitter:description" content="重要说明: 这是一个系列教程，非本人原创，而是翻译国外的一个教程。本人也在学习Swift，看到这个教程对开发一个实际的APP非常有帮助，所以翻译共享给大家。原教程非常长，我会陆续翻译并发布，欢迎交流与分享。
+
+自定义报头(Header)在Alamofire的请求中加入自定义报头(Header)有三种方式：第一种是通过Alamofire的管理器配置(Manager)为整个会话添加自定义报头(Hea">
+<meta name="twitter:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_070.png?imageView2/0/w/400">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> iOS Apps with REST APIs(六) | CD826Workshop </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?317a9862593d085ce8f8aa660d633b05";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">CD826Workshop</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Talk is cheap, show me the code.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                iOS Apps with REST APIs(六)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-02T18:24:00+08:00" content="2016-07-02">
+              2016-07-02
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/swift/" itemprop="url" rel="index">
+                    <span itemprop="name">swift</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/swift/REST/" itemprop="url" rel="index">
+                    <span itemprop="name">REST</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/02/appWithRest-6/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/02/appWithRest-6/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>重要说明: 这是一个系列教程，非本人原创，而是翻译国外的一个教程。本人也在学习Swift，看到这个教程对开发一个实际的APP非常有帮助，所以翻译共享给大家。原教程非常长，我会陆续翻译并发布，欢迎交流与分享。</p>
+</blockquote>
+<h1 id="自定义报头-Header"><a href="#自定义报头-Header" class="headerlink" title="自定义报头(Header)"></a>自定义报头(Header)</h1><p>在Alamofire的请求中加入自定义报头(Header)有三种方式：第一种是通过Alamofire的管理器配置(Manager)为整个会话添加自定义报头(Header)，第二种是通过报头参数为单独的某一个请求添加自定义报头，最后一种方式是通过<code>URLRequestConvertible</code>添加自定义报头。下面我们将逐个进行讲解。</p>
+<h2 id="会话报头"><a href="#会话报头" class="headerlink" title="会话报头"></a>会话报头</h2><p>有些报头(Header)在每次进行API请求的时候都需要提交，如：API键值，或者<code>Accept</code>等。因此这些报头(Header)最好是在全局会话中进行设置，而不是每次请求的时候重复设置。对于这种情况，我们可以通过Alamofire的管理器(Manager)进行设置：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> manager = <span class="type">Alamofire</span>.<span class="type">Manager</span>.sharedInstance   </span><br><span class="line">manager.session.configuration.<span class="type">HTTPAdditionalHeaders</span> = </span><br><span class="line">  [<span class="string">"Accept"</span>: <span class="string">"application/json"</span>]</span><br></pre></td></tr></table></figure>
+<p>这样设置后，后面我们在请求的是否就需要通过Alamofire的管理器来，而不是Alamofire类方法，API键值就不需要在每次请求的时候再进行设置了(译者注：这里应该是说的<code>Accept</code>，不过API Key也是一样)。请求时，使用：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> manager = <span class="type">Alamofire</span>.<span class="type">Manager</span>.sharedInstance </span><br><span class="line">manager.request(...)</span><br></pre></td></tr></table></figure>
+<p>替换原来的方式：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Alamofire</span>.request(...)</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>Alamofire的管理器是可以被复用，因此我们在<code>GitHubAPIManager</code>中增加一个变量来保存它：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GitHubAPIManager</span> </span>&#123;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">let</span> sharedInstance = <span class="type">GitHubAPIManager</span>() </span><br><span class="line">  <span class="keyword">var</span> alamofireManager:<span class="type">Alamofire</span>.<span class="type">Manager</span></span><br><span class="line">    </span><br><span class="line">  <span class="keyword">let</span> clientID: <span class="type">String</span> = <span class="string">"1234567890"</span></span><br><span class="line">  <span class="keyword">let</span> clientSecret: <span class="type">String</span> = <span class="string">"abcdefghijkl"</span></span><br><span class="line">  <span class="keyword">init</span> () &#123;</span><br><span class="line">    <span class="keyword">let</span> configuration = <span class="type">NSURLSessionConfiguration</span>.defaultSessionConfiguration()    </span><br><span class="line">    alamofireManager = <span class="type">Alamofire</span>.<span class="type">Manager</span>(configuration: configuration)</span><br><span class="line">  &#125;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在你的API管理器中增加<code>Alamofire.Manager</code>的实例。</p>
+</blockquote>
+<h2 id="一次性请求的报头-Header"><a href="#一次性请求的报头-Header" class="headerlink" title="一次性请求的报头(Header)"></a>一次性请求的报头(Header)</h2><p>那如何为一个单独的请求设置报头(Header)呢？Alamofire(1.3版本之后)为我们提供了很方便的方法来达到这个目的。首先我们为自定义的报头创建一个字典(Dictionary):</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> headers = [<span class="string">"Accept"</span>: <span class="string">"application/json"</span>]</span><br></pre></td></tr></table></figure>
+<p>然后传递给我们要调用的<code>manager.request</code>(如果不想在请求中包含前面设置的全局报头则可以使用<code>Alamofire.request</code>):</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> urlString = <span class="string">"https://api.github.com/gists"</span> </span><br><span class="line">manager.request(.<span class="type">GET</span>, urlString, headers: headers).responseJSON(...)</span><br></pre></td></tr></table></figure>
+<p>或：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> urlString = <span class="string">"https://api.github.com/gists"</span> </span><br><span class="line"><span class="type">Alamofire</span>.request(.<span class="type">GET</span>, urlString, headers: headers).responseJSON(...)</span><br></pre></td></tr></table></figure>
+<h2 id="通过URLRequestConvertible设置报头"><a href="#通过URLRequestConvertible设置报头" class="headerlink" title="通过URLRequestConvertible设置报头"></a>通过<code>URLRequestConvertible</code>设置报头</h2><p>因为我们使用Alamofire路由器(Router)来构建我们的URL请求，因此我们可以在<code>NSMutableURLRequest</code>中直接添加报头(Header)。如：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="type">URL</span> = <span class="type">NSURL</span>(string: <span class="type">GistRouter</span>.baseURLString)!</span><br><span class="line"><span class="keyword">let</span> <span class="type">URLRequest</span> = <span class="type">NSMutableURLRequest</span>(<span class="type">URL</span>:</span><br><span class="line">  <span class="type">URL</span>.<span class="type">URLByAppendingPathComponent</span>(result.path))</span><br><span class="line"></span><br><span class="line"><span class="type">URLRequest</span>.setValue(<span class="string">"application/json"</span>, forHTTPHeaderField: <span class="string">"Accept"</span>)</span><br></pre></td></tr></table></figure>
+<p>这样当URL进行请求的时候就会使用这些报头。我们后面会使用这种方式将OAuth的访问令牌添加到报头中。</p>
+<h2 id="报头小结"><a href="#报头小结" class="headerlink" title="报头小结"></a>报头小结</h2><p>许多功能中都会使用到报头(Header)，如：缓存、cookies等。后面我们所要实现的三种验证方式都会使用到，在那里我们会更进一步详细说明使用它。</p>
+<blockquote>
+<p>检查你的开发文档中关于报头要求的章节，如果需要把它们添加到API管理器中。先不要担心有关认证的报头，我们会在认证章节中来处理。</p>
+</blockquote>
+<p>在实现认证功能之前，我们还是先继续完善表格视图中的基本功能。接下来，我们会实现拥有者头像加载及显示，视图的滚动加载，及下拉刷新等功能。</p>
+<h1 id="图像的异步加载及缓存"><a href="#图像的异步加载及缓存" class="headerlink" title="图像的异步加载及缓存"></a>图像的异步加载及缓存</h1><p>到目前为止，我们构建了一个Swift的App，能够通过GitHub的API获取gists。我们已经实现如下功能：</p>
+<ul>
+<li>通过GitHub的gists API获取公共的gists列表</li>
+<li>使用Alamofire的响应序列化器将JSON转换为Swift对象数组</li>
+<li>解析web服务返回JSON数据中的一些字段</li>
+<li>将列表在表格视图中显示</li>
+</ul>
+<p>在本章我们将添加一个新的功能，就是：为表格视图的每一个行显示gists拥有者的头像。我们将使用异步的方式，通过解析到的图像URL地址来加载图像。此外，我们还需要处理表格视图中单元格的复用问题，把图片加入到缓存中，并在显示的时候从中获取，而不是在每次需要显示的时候都从服务器中重复下载。</p>
+<blockquote>
+<p>如果你的API中也需要显示图片，那么请跟随本章节来完成它。如果没有，那么你可以先跳过本章，等后面需要时，即使不是在视图表格中显示，再返回来。</p>
+</blockquote>
+<p>当本章完成后，App界面看起来如下：</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_070.png?imageView2/0/w/400" style="width:320px"><br></div>
+
+<p><em>如果你前面没有一直跟着本教程编写代码，你可以从<a href="https://github.com/cmoulton/grokSwiftREST_v1.1/releases/tag/headers" target="_blank" rel="external">GitHub</a>上下载前一个章节的完整代码。</em></p>
+<p><em>如果你不想敲代码，你可以从<a href="https://github.com/cmoulton/grokSwiftREST_v1.1/releases/tag/cellImages" target="_blank" rel="external">GitHub</a>上下载本章的代码。</em></p>
+<h2 id="通过URL加载图片"><a href="#通过URL加载图片" class="headerlink" title="通过URL加载图片"></a>通过URL加载图片</h2><p>在<code>Gist</code>类中的<code>init(json:)</code>方法中我们已经解析了gist拥有者头像的URL地址：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">self</span>.ownerAvatarURL = json[<span class="string">"owner"</span>][<span class="string">"avatar_url"</span>].string</span><br></pre></td></tr></table></figure>
+<p>现在我们已经为从URL中获取图片准备好了，接下来让我们完成它。首先，在<code>GitHubAPIManager</code>中添加下面的函数：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GitHubAPIManager</span> </span><br><span class="line"></span>&#123;</span><br><span class="line">  ...</span><br><span class="line">   </span><br><span class="line">  <span class="function"><span class="keyword">func</span> <span class="title">imageFromURLString</span><span class="params">(imageURLString: String, completionHandler: </span><br><span class="line">    <span class="params">(UIImage?, NSError?)</span></span></span> -&gt; <span class="type">Void</span>) &#123;</span><br><span class="line">    alamofireManager.request(.<span class="type">GET</span>, imageURLString)</span><br><span class="line">      .response &#123; (request, response, data, error) <span class="keyword">in</span></span><br><span class="line">        <span class="comment">// use the generic response serializer that returns NSData </span></span><br><span class="line">        <span class="keyword">if</span> data == <span class="literal">nil</span> &#123;</span><br><span class="line">          completionHandler(<span class="literal">nil</span>, <span class="literal">nil</span>)</span><br><span class="line">          <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">let</span> image = <span class="type">UIImage</span>(data: data! <span class="keyword">as</span> <span class="type">NSData</span>) </span><br><span class="line">        completionHandler(image, <span class="literal">nil</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们使用<code>imageURLString</code>发起一个<code>GET</code>请求。一旦我们得到响应(注意这里返回的类型是<code>NSData</code>，因为我们使用的<code>.response</code>方法)，先对数据进行检查，并尝试转换成图片。如果转换成功，那么将它传给完成处理程序。如果失败(或者我们的请求根本不是图片)，我们将退出，并返回一个错误给完成处理程序。</p>
+<h2 id="将图像设置给UITableViewCell"><a href="#将图像设置给UITableViewCell" class="headerlink" title="将图像设置给UITableViewCell"></a>将图像设置给<code>UITableViewCell</code></h2><p>现在我们终于可以显示图片了。修改<code>MasterViewController.cellForRowAtIndexPath</code>:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView,</span><br><span class="line">  cellForRowAtIndexPath indexPath: NSIndexPath)</span></span> -&gt; <span class="type">UITableViewCell</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> cell = tableView.dequeueReusableCellWithIdentifier(<span class="string">"Cell"</span>, forIndexPath: indexPath)</span><br><span class="line">      </span><br><span class="line">  <span class="keyword">let</span> gist = gists[indexPath.row] </span><br><span class="line">  cell.textLabel!.text = gist.description </span><br><span class="line">  cell.detailTextLabel!.text = gist.ownerLogin </span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> urlString = gist.ownerAvatarURL &#123;</span><br><span class="line">    <span class="type">GitHubAPIManager</span>.sharedInstance.imageFromURLString(urlString, completionHandler: &#123; </span><br><span class="line">      (image, error) <span class="keyword">in</span></span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">let</span> error = error &#123;</span><br><span class="line">        <span class="built_in">print</span>(error)</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">let</span> cellToUpdate = <span class="keyword">self</span>.tableView?.cellForRowAtIndexPath(indexPath) &#123; </span><br><span class="line">        cellToUpdate.imageView?.image = image <span class="comment">// will work fine even if image is nil </span></span><br><span class="line">        <span class="comment">// need to reload the view, which won't happen otherwise</span></span><br><span class="line">        <span class="comment">// since this is in an async call</span></span><br><span class="line">        cellToUpdate.setNeedsLayout()</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123; </span><br><span class="line">    cell.imageView?.image = <span class="literal">nil</span></span><br><span class="line">  &#125;</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">return</span> cell </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们通过<code>if let urlString = gist.ownerAvatarURL</code>检查图像的URL是否有值。如果有值那么调用前面写的方法请求图片数据。否则，我们将清空图片单元格:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">GitHubAPIManager</span>.sharedInstance.imageFromURLString(urlString, completionHandler: &#123;</span><br><span class="line">  ...</span><br><span class="line">&#125; <span class="keyword">else</span> &#123; </span><br><span class="line">  cell.imageView?.image = <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在完成处理程序中，我们先检查是否有错误，如果有把它打印出来。这里，我们没有使用<code>guard</code>那是因为在这种情况下，我们得先清空原来存在的图片，而<code>guard</code>将强迫我们返回，从而无法清除原来已经存在的图片：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">completionHandler: &#123; (image, error) <span class="keyword">in</span> </span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> error = error &#123;</span><br><span class="line">    <span class="built_in">print</span>(error)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> cellToUpdate = <span class="keyword">self</span>.tableView?.cellForRowAtIndexPath(indexPath) &#123; </span><br><span class="line">    cellToUpdate.imageView?.image = image <span class="comment">// will work fine even if image is nil </span></span><br><span class="line">    <span class="comment">// need to reload the view, which won't happen otherwise</span></span><br><span class="line">    <span class="comment">// since this is in an async call</span></span><br><span class="line">    cellToUpdate.setNeedsLayout()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>一旦我们得到图片就把它设置给单元格。这里会稍微有些复杂，因为<code>imageFromURLString</code>方法是异步的，而且<code>UITableView</code>又会复用单元格。因为在这里我们使用了<code>dequeueReusableCellWithIdentifier</code>，表格视图显示的时候会复用那些已经在不在显示区域的单元格。举个例子，假如我们有20个gists需要显示，但在一屏中仅能显示10个，这时候表格视图则大概只会创建12～14个。假如一个单于格已经滚出了屏幕，我们将无法给它设置图片，因为这时候有可能它已经被其它gist对象复用了，从而会造成数据错位的错误。</p>
+<p>解决这个问题的方法就是使用索引路径，一旦我们得到图片，通过该索引路径获取表格视图的单元格：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> cellToUpdate = <span class="keyword">self</span>.tableview?.cellForRowAtIndexPath(indexPath)</span><br></pre></td></tr></table></figure>
+<p>这样我们就可以把图片设置给单元格了。因为图片的加载是异步进行的，假如相应的单元格还是显示的，那么我们就可以使用<code>cellToUpdate.setNeedsLayout()</code>告诉视图我们已经改变了部分东西，需要进行重新绘制。</p>
+<p>需要注意的一点是，这里我们没有检查所要设置给单元格的图片是否是为空。如果因为某种原因图像为空，我们还得需要清除单元格中原来的图像，因此最好使用<code>cellToUpdate.imageView?.image = result.value</code>来设置。</p>
+<p>保存并运行。你应该可以看到每个gist拥有者的头像，如果他们设置了自己头像的话：</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_080.png?imageView2/0/w/400" style="width:320px"><br></div> 
+
+<blockquote>
+<p>如果你的API中也有图片，参考本小节来加载它们。</p>
+</blockquote>
+<h2 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h2><p>我们为每一个单元格发起图片请求，但有时候当我们得到图片的时候已经不需要了，因为它已经滚出了屏幕的显示区域。一种优化方式就是当单元格滚出屏幕时取消Alamofire请求。但假如你的App中需要处理大量的图片，我估计你会不想这么干(因为你知道，这样会造成滚动不平滑)。现在我们的滚动看起来还是非常平滑的，并且我们还打算增加图片的缓存处理，因此刚才所说的那个问题已经不是现在急需处理的问题了。</p>
+<p>即使对于这么简单的应用，图片缓存的优化还是非常值得的，这样就不用每次都去请求了。接下来我们将快速的，使用一个简单的，只能在单次运行中有效的缓存，来看看如何工作的。然后，我们将使用<strong>PINRemoeImage</strong>替换我们的缓存，<strong>PINRemoeImage</strong>是一个非常智能的具有持久化的缓存。</p>
+<h2 id="图片缓存"><a href="#图片缓存" class="headerlink" title="图片缓存"></a>图片缓存</h2><p>在<code>MasterViewController</code>中我们添加一个字典用来存放这些图像，并使用它们的URL作为key:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> imageCache: <span class="type">Dictionary</span>&lt;<span class="type">String</span>, <span class="type">UIImage</span>?&gt; = <span class="type">Dictionary</span>&lt;<span class="type">String</span>, <span class="type">UIImage</span>?&gt;()</span><br></pre></td></tr></table></figure>
+<p>这样我们就可以在获取图片后将它存放字典中(在<code>cellForRowAtIndexPath</code>函数中):</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> urlString = gist.ownerAvatarURL &#123; </span><br><span class="line">  <span class="type">GitHubAPIManager</span>.sharedInstance.imageFromURLString(urlString, completionHandler: &#123;</span><br><span class="line">    (image, error) <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> error = error &#123;</span><br><span class="line">      <span class="built_in">print</span>(error)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// Save the image so we won't have to keep fetching it if they scroll</span></span><br><span class="line">    <span class="keyword">self</span>.imageCache[urlString] = image</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> cellToUpdate = <span class="keyword">self</span>.tableView?.cellForRowAtIndexPath(indexPath) &#123;</span><br><span class="line">      cellToUpdate.imageView?.image = image <span class="comment">// will work fine even if image is nil </span></span><br><span class="line">      <span class="comment">// need to reload the view, which won't happen otherwise</span></span><br><span class="line">      <span class="comment">// since this is in an async call</span></span><br><span class="line">      cellToUpdate.setNeedsLayout()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125; <span class="keyword">else</span> &#123; </span><br><span class="line">  cell.imageView?.image = <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在获取图片前我们先检查所要加载的图片是否已经在缓存中:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> urlString = gist.ownerAvatarURL &#123;</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> cachedImage = imageCache[urlString] &#123;</span><br><span class="line">    cell.imageView?.image = cachedImage <span class="comment">// will work fine even if image is nil </span></span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="type">GitHubAPIManager</span>.sharedInstance.imageFromURLString(urlString, completionHandler: &#123;</span><br><span class="line">      ...</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123; </span><br><span class="line">  cell.imageView?.image = <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最终代码为：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView, cellForRowAtIndexPath</span><br><span class="line">  indexPath: NSIndexPath)</span></span> -&gt; <span class="type">UITableViewCell</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> cell = tableView.dequeueReusableCellWithIdentifier(<span class="string">"Cell"</span>, forIndexPath: indexPath)</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">let</span> gist = gists[indexPath.row]</span><br><span class="line">  cell.textLabel!.text = gist.description </span><br><span class="line">  cell.detailTextLabel!.text = gist.ownerLogin</span><br><span class="line">  <span class="comment">// set cell.imageView to display image at gist.ownerAvatarURL </span></span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> urlString = gist.ownerAvatarURL &#123;</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> cachedImage = imageCache[urlString] &#123;</span><br><span class="line">      cell.imageView?.image = cachedImage <span class="comment">// will work fine even if image is nil</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="type">GitHubAPIManager</span>.sharedInstance.imageFromURLString(urlString, completionHandler: &#123;</span><br><span class="line">        (image, error) <span class="keyword">in</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> error = error &#123;</span><br><span class="line">          <span class="built_in">print</span>(error)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// Save the image so we won't have to keep fetching it if they scroll</span></span><br><span class="line">        <span class="keyword">self</span>.imageCache[urlString] = image</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> cellToUpdate = <span class="keyword">self</span>.tableView?.cellForRowAtIndexPath(indexPath) &#123;</span><br><span class="line">          cellToUpdate.imageView?.image = image <span class="comment">// will work fine even if image is nil </span></span><br><span class="line">          <span class="comment">// need to reload the view, which won't happen otherwise</span></span><br><span class="line">          <span class="comment">// since this is in an async call</span></span><br><span class="line">          cellToUpdate.setNeedsLayout()</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    cell.imageView?.image = <span class="literal">nil</span> </span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> cell </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>为了测试这些代码，需要设置一个断点，并单步执行看看代码是如何执行的。在需要设置断点的前面的行号中点击一下就可以设置断点了:</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_090.png?imageView2/0/h/400" style="height:320px"><br></div>   
+
+<p>然后运行。当运行到断点时会停止。这时你可以通过Xcode底部的面板查看变量的值，并逐步调试：</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_100.png?imageView2/0/h/400" style="height:320px"><br></div>  
+
+<p>点击<code>step over</code>按钮执行下一句:</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_110.png"><br></div>  
+
+<p>通过查看高亮显示的代码行，可以知道哪个代码路径被执行。如果头像URL有值，那么将尝试加载：</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_120.png"><br></div>   
+
+<p>如果没有，单元格将被设置为<code>nil</code>：</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_130.png"><br></div>   
+
+<p>如果想继续执行直到下一个断点，可以点击<code>continue</code>按钮:</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_140.png"><br></div>  
+
+<p>当你每次运行App的时候，所有的图像在第一次显示的时候都将通过URL进行加载，因为这里我们并没有将缓存持久化。在下个小节我们将解决这个问题。当我们在屏幕上来回滚动时，表格视图将重复利用了已缓存的图像。你可以在我们从缓存中加载图像的代码处设置一个断点，这样就可以很方便的查看缓存是如何被复用的啦：</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_150.png?imageView2/0/h/400" style="height:320px"><br></div>  
+
+<p>当单元格初始化完成后，上下滚动时，你将看到断点处的代码被执行。</p>
+<h2 id="更好的缓存-PINRemoteImage"><a href="#更好的缓存-PINRemoteImage" class="headerlink" title="更好的缓存: PINRemoteImage"></a>更好的缓存: PINRemoteImage</h2><p>我们通过Alamofire的请求从JSON数据中解析出图像的URL，通过异步请求的方式把加载的图片设置给<code>UITableViewCell</code>。然后我们建立一个初级的缓存，在单次运行中让图片可以被复用，从而帮我们避免了重复请求。当然，在发行版的APP中还是需要建立一个可以持久化的缓存机制，以便在多次运行中图片都可以复用。</p>
+<p><a href="https://github.com/pinterest/PINRemoteImage" target="_blank" rel="external">PINRemoteImage</a>是一个支持图片持久化的缓存处理库，那么接下来我们使用它，使得所要加载的图片只需要加载一次，并可以被重复使用。而且<strong>PINRemoteImage</strong>要比我们的非持久化缓存更容易集成和使用。</p>
+<p>使用CocoaPods将<code>PINRemoteImage v1.2</code>加入到你的工程中。并在<code>MasterViewController</code>中引入，然后删除我们刚才写的缓存代码:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> UIKit</span><br><span class="line"><span class="keyword">import</span> PINRemoteImage</span><br><span class="line">  </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MasterViewController</span>: <span class="title">UITableViewController</span> </span>&#123;</span><br><span class="line">  ...</span><br><span class="line">  </span><br><span class="line">  ~~<span class="keyword">var</span> imageCache: <span class="type">Dictionary</span>&lt;<span class="type">String</span>, <span class="type">UIImage</span>?&gt; = <span class="type">Dictionary</span>&lt;<span class="type">String</span>, <span class="type">UIImage</span>?&gt;()~~</span><br><span class="line"></span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>PINRemoteImage最好和一个占位符图像一起使用。你可以把一个图像拖入到工程中，并把它改名为<code>placeholder.png</code>。这样如果用户没有设置头像的话，会显示我们刚才设置的占位符图像：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView, cellForRowAtIndexPath</span><br><span class="line">  indexPath: NSIndexPath)</span></span> -&gt; <span class="type">UITableViewCell</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> cell = tableView.dequeueReusableCellWithIdentifier(<span class="string">"Cell"</span>, forIndexPath: indexPath)</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">let</span> gist = gists[indexPath.row] </span><br><span class="line">  cell.textLabel!.text = gist.description </span><br><span class="line">  cell.detailTextLabel!.text = gist.ownerLogin </span><br><span class="line">  cell.imageView?.image = <span class="literal">nil</span></span><br><span class="line">   </span><br><span class="line">  <span class="comment">// set cell.imageView to display image at gist.ownerAvatarURL</span></span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> urlString = gist.ownerAvatarURL, url = <span class="type">NSURL</span>(string: urlString) &#123; </span><br><span class="line">    cell.imageView?.pin_setImageFromURL(url, placeholderImage:</span><br><span class="line">      <span class="type">UIImage</span>(named: <span class="string">"placeholder.png"</span>)) </span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    cell.imageView?.image = <span class="type">UIImage</span>(named: <span class="string">"placeholder.png"</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> cell </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>保存并运行。你会发现如果用户设置了头像的话将被加载显示，否则显示我们所设置的占位符图像：</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_160.png?imageView2/0/h/400" style="height:240px"><br></div> 
+
+<p>点击<a href="https://github.com/cmoulton/grokSwiftREST_v1.1/releases/tag/cellImages" target="_blank" rel="external">这里</a>可以下载本章的最终代码。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ios/" rel="tag">#ios</a>
+          
+            <a href="/tags/swift/" rel="tag">#swift</a>
+          
+            <a href="/tags/REST/" rel="tag">#REST</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/06/30/appWithRest-5/" rel="next" title="iOS Apps with REST APIs(五)">
+                <i class="fa fa-chevron-left"></i> iOS Apps with REST APIs(五)
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/07/02/appWithRest-7/" rel="prev" title="iOS Apps with REST APIs(七)">
+                iOS Apps with REST APIs(七) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/07/02/appWithRest-6/"
+     data-title="iOS Apps with REST APIs(六)"
+     data-content=""
+     data-url="http://cd826.github.io/2016/07/02/appWithRest-6/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/07/02/appWithRest-6/"
+           data-title="iOS Apps with REST APIs(六)" data-url="http://cd826.github.io/2016/07/02/appWithRest-6/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpg"
+               alt="cd826Dong" />
+          <p class="site-author-name" itemprop="name">cd826Dong</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">15</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#自定义报头-Header"><span class="nav-number">1.</span> <span class="nav-text">自定义报头(Header)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#会话报头"><span class="nav-number">1.1.</span> <span class="nav-text">会话报头</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一次性请求的报头-Header"><span class="nav-number">1.2.</span> <span class="nav-text">一次性请求的报头(Header)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过URLRequestConvertible设置报头"><span class="nav-number">1.3.</span> <span class="nav-text">通过URLRequestConvertible设置报头</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#报头小结"><span class="nav-number">1.4.</span> <span class="nav-text">报头小结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#图像的异步加载及缓存"><span class="nav-number">2.</span> <span class="nav-text">图像的异步加载及缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#通过URL加载图片"><span class="nav-number">2.1.</span> <span class="nav-text">通过URL加载图片</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#将图像设置给UITableViewCell"><span class="nav-number">2.2.</span> <span class="nav-text">将图像设置给UITableViewCell</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优化"><span class="nav-number">2.3.</span> <span class="nav-text">优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#图片缓存"><span class="nav-number">2.4.</span> <span class="nav-text">图片缓存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更好的缓存-PINRemoteImage"><span class="nav-number">2.5.</span> <span class="nav-text">更好的缓存: PINRemoteImage</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">2.6.</span> <span class="nav-text">小结</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">cd826Dong</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"cd826"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

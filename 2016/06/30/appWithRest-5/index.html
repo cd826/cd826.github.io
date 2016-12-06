@@ -1,0 +1,870 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="ios,swift,REST," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="重要说明: 这是一个系列教程，非本人原创，而是翻译国外的一个教程。本人也在学习Swift，看到这个教程对开发一个实际的APP非常有帮助，所以翻译共享给大家。原教程非常长，我会陆续翻译并发布，欢迎交流与分享。
+
+为什么使用像Alamofire这样的库关于编程中最难的两件事情有一堆的笑话。有人说最难的事情是命名、评估和off-by-one(译者注：off-by-one大小差一错误是程序设计中常见错误">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS Apps with REST APIs(五)">
+<meta property="og:url" content="http://cd826.github.io/2016/06/30/appWithRest-5/index.html">
+<meta property="og:site_name" content="CD826Workshop">
+<meta property="og:description" content="重要说明: 这是一个系列教程，非本人原创，而是翻译国外的一个教程。本人也在学习Swift，看到这个教程对开发一个实际的APP非常有帮助，所以翻译共享给大家。原教程非常长，我会陆续翻译并发布，欢迎交流与分享。
+
+为什么使用像Alamofire这样的库关于编程中最难的两件事情有一堆的笑话。有人说最难的事情是命名、评估和off-by-one(译者注：off-by-one大小差一错误是程序设计中常见错误">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_020.png?imageView2/0/h/640">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_030.png?imageView2/0/h/200">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_040.png?imageView2/0/w/400">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_050.png?imageView2/0/w/400">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_060.png?imageView2/0/w/400">
+<meta property="og:updated_time" content="2016-06-30T10:39:37.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS Apps with REST APIs(五)">
+<meta name="twitter:description" content="重要说明: 这是一个系列教程，非本人原创，而是翻译国外的一个教程。本人也在学习Swift，看到这个教程对开发一个实际的APP非常有帮助，所以翻译共享给大家。原教程非常长，我会陆续翻译并发布，欢迎交流与分享。
+
+为什么使用像Alamofire这样的库关于编程中最难的两件事情有一堆的笑话。有人说最难的事情是命名、评估和off-by-one(译者注：off-by-one大小差一错误是程序设计中常见错误">
+<meta name="twitter:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_020.png?imageView2/0/h/640">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> iOS Apps with REST APIs(五) | CD826Workshop </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?317a9862593d085ce8f8aa660d633b05";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">CD826Workshop</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Talk is cheap, show me the code.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                iOS Apps with REST APIs(五)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-06-30T18:19:00+08:00" content="2016-06-30">
+              2016-06-30
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/swift/" itemprop="url" rel="index">
+                    <span itemprop="name">swift</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/swift/REST/" itemprop="url" rel="index">
+                    <span itemprop="name">REST</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/06/30/appWithRest-5/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/30/appWithRest-5/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>重要说明: 这是一个系列教程，非本人原创，而是翻译国外的一个教程。本人也在学习Swift，看到这个教程对开发一个实际的APP非常有帮助，所以翻译共享给大家。原教程非常长，我会陆续翻译并发布，欢迎交流与分享。</p>
+</blockquote>
+<h1 id="为什么使用像Alamofire这样的库"><a href="#为什么使用像Alamofire这样的库" class="headerlink" title="为什么使用像Alamofire这样的库"></a>为什么使用像Alamofire这样的库</h1><p>关于编程中最难的两件事情有一堆的笑话。有人说最难的事情是命名、评估和<code>off-by-one</code>(译者注：off-by-one大小差一错误是程序设计中常见错误，具体可以参考这里<a href="https://en.wikipedia.org/wiki/Off-by-one_error" target="_blank" rel="external">off-by-one</a>)错误。还有人说是评估和拿到回报。但我认为是固化需求，固化需求可以让你知道哪些东西需要做，并能够让你保持代码在同一级别上抽象。</p>
+<p>那么什么是在同一级别上抽象呢？先让我们看看一些古老的，让人迷糊的Objective-C代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">NSArray *myGists = [[NSArray alloc]] initWithObjects:</span><br><span class="line">  [NSString stringWithString:@&quot;text of gist 1&quot;],</span><br><span class="line">  [NSString stringWithString:@&quot;text of gist 2&quot;],</span><br><span class="line">  nil];</span><br><span class="line">    </span><br><span class="line">// 使用myGists进行某些处理</span><br><span class="line"> </span><br><span class="line">[myGists release];</span><br></pre></td></tr></table></figure>
+<p>这段代码的核心功能就是想对Gists数组进行某些处理。但是对于程序员来说，这里想的不仅仅是gists，还要考虑内存的管理(如：分配<code>alloc</code>、释放<code>release</code>)。因此，对于他们来说，在脑中要同时处理2个不同层次的抽象。这些对象不仅是Gists对象，它们还是内存中的块。</p>
+<a id="more"></a>
+<p>当然，所有的Gists对象都是内存中的块。而且某个地方的代码也是这么去处理。但，它还是不应该与gists的业务操作，如收藏、编辑，在同一个地方。这也会把web service的调用混在一起了：</p>
+<ul>
+<li>一部分代码需要知道并处理底层的网络事务</li>
+<li>一部分代码要处理JSON</li>
+<li>还有一部分代码要处理gists(或你的对象)</li>
+</ul>
+<p>这是三个层次的抽象，它们不需要(也不应该)混在一起。在同一层次的抽象上编码，要比在不同层次上来回切换理解代码要轻松的多。</p>
+<p>你可以不需要像SwiftyJSON、Alamofire这样的库。但它们的确能把底层处理封装的更好。而且一旦它们开源，你还可以在需要的时候对代码进行调整修改，而你又会失去什么呢？</p>
+<h1 id="连接REST-API和表格视图"><a href="#连接REST-API和表格视图" class="headerlink" title="连接REST API和表格视图"></a>连接REST API和表格视图</h1><p><code>UITableView</code>控件是iOS应用中常用的控件。结合Web Service，就是很多App的核心业务功能，如：邮件、Twitter及Facebook，甚至苹果自己的备忘录，连App Store也是一样。</p>
+<p>接下来我们将新建一个Xcode工程，通过GitHub的gists API获取数据。然后在表格视图中显示公共的gists列表。由此，我们将发起一个<code>GET</code>请求，并将返回的数据解析为JSON格式，然后让表格视图显示这些结果。</p>
+<blockquote>
+<p>本章重点讲的是如何把API返回的数据绑定到表格视图中，不会涉及如何将<code>UITableView</code>控件添加到Swift应用这种基础知识。如果你对如何使用<code>UITableView</code>控件有困惑，请参考<a href="https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/TableView_iPhone/CreateConfigureTableView/CreateConfigureTableView.html" target="_blank" rel="external">Apple’s docs</a>或者<a href="https://www.weheartswift.com/how-to-make-a-simple-table-view-with-ios-8-and-swift/" target="_blank" rel="external">这个教程</a>。</p>
+</blockquote>
+<p>如果你不想自己敲代码，请到GitHub下载本章的<a href="https://github.com/cmoulton/grokSwiftREST_v1.1/releases/tag/tableview" target="_blank" rel="external">代码</a>。</p>
+<h2 id="1-创建Swift工程"><a href="#1-创建Swift工程" class="headerlink" title="1. 创建Swift工程"></a>1. 创建Swift工程</h2><p>我们终于可以动手创建GitHub Gists应用了。首先我们需要在Xcode中创建一个工程：</p>
+<p>启动Xcode。</p>
+<p>创建一个<code>master-detail</code>类型Swift工程(Devices中你可以选择<code>universal</code>或者<code>iPhone</code>)。确保在创建工程时选择使用Swift语言，并且没有选中<code>Core Data</code>选项。</p>
+<p>使用CoclaPods将<a href="https://github.com/Alamofire/Alamofire" target="_blank" rel="external">Alamofire 3.1</a>和<a href="https://github.com/SwiftyJSON/SwiftyJSON" target="_blank" rel="external">SwoftyJSON 2.3</a>添加到工程中(如果不知道如何做，请参考<a href="http://blog.devtang.com/2014/05/25/use-cocoapod-to-manage-ios-lib-dependency/" target="_blank" rel="external">这里</a>)。</p>
+<p>然后，打开类型为<code>.xcworkspace</code>文件。</p>
+<p>由于我们现在还使用不到由Xcode生成的样板代码，先不要管它，后面我们涉及到的时候会来解释。这里你唯一需要注意的是，Xcode创建了两个视图控制器：一个表格视图控制器<code>MasterViewController</code>，和一个<code>detailViewController</code>详细页面视图控制器。而它们正好可以用来显示我们gists的列表和gist的详细信息。接下来几章我们都会与<code>MasterViewController</code>打交道。</p>
+<p>创建一个新文件并命名为：<code>GitHubAPIManager.swift</code>。这个类将负责与API之间的处理，也可以称为API管理器。它可以帮我们把代码组织的更好，也避免使视图控制器的代码变成一个庞大的文件。同时，也方便我们可以在多个视图控制器之间共享代码。</p>
+<p>在文件的头部，引入Alamofire和SwiftyJSON:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Foundation</span><br><span class="line"><span class="keyword">import</span> Alamofire</span><br><span class="line"><span class="keyword">import</span> SwiftyJSON</span><br><span class="line">  </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GitHubAPIManager</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>如果你是使用的是其它API代码，那么最好这里将名称更改为合适的名称，而不是<code>GitHubAPIManager</code>。</p>
+</blockquote>
+<p>当你与API打交道的时候，通常我们会得到的是一堆代码，而不是一个对象。我们需要设置自定义报头，跟踪OAuth访问令牌，处理<code>client secrets</code>和<code>client ID</code>，处理认证或者其它常见的错误。为了将这些代码从App Delegate及我们的模型对象中分离，我们将会把它们统一到<code>GitHubAPIManager</code>中进行管理。</p>
+<p>在本教程的实例中我们只与GitHub API打交道，所以这里只有一个API管理器。因此我们在该类中声明一个<code>sharedInstance</code>变量，这样其它调用者就可以通过它来获取<code>GitHubAPIManager</code>的唯一实例：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Foundation</span><br><span class="line"><span class="keyword">import</span> Alamofire</span><br><span class="line"><span class="keyword">import</span> SwiftyJSON</span><br><span class="line">  </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GitHubAPIManager</span> </span>&#123;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">let</span> sharedInstance = <span class="type">GitHubAPIManager</span>()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接下来我们就可以通过API请求获取不需认证的公共gists列表了。为了方便我们快速理解，这里当我们获取API请求结果后先在控制台打印出来。然后我们再把它和表格视图集成。</p>
+<p>因此，我们先声明这个简单的方法：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GitHubAPIManager</span> </span>&#123;</span><br><span class="line">  ...</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">func</span> <span class="title">printPublicGists</span><span class="params">()</span></span> -&gt; <span class="type">Void</span> &#123;</span><br><span class="line">    <span class="comment">// <span class="doctag">TODO:</span> 待实现</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接下来让我们创建<code>Router</code>路由，并把新建的文件命名为：<code>GistRouter.swift</code>。该路由器将负责创建URL请求，从而能够让我们的API管理器保持简单。新建的路由器和前面类似，除了只有一个获取公共gists的<code>GET</code>调用：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Foundation</span><br><span class="line"><span class="keyword">import</span> Alamofire</span><br><span class="line">  </span><br><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">GistRouter</span>: <span class="title">URLRequestConvertible</span> </span>&#123;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">let</span> baseURLString:<span class="type">String</span> = <span class="string">"https://api.github.com"</span></span><br><span class="line">  <span class="keyword">case</span> <span class="type">GetPublic</span>() <span class="comment">// GET https://api.github.com/gists/public</span></span><br><span class="line">  <span class="keyword">var</span> <span class="type">URLRequest</span>: <span class="type">NSMutableURLRequest</span> &#123; </span><br><span class="line">    <span class="keyword">var</span> method: <span class="type">Alamofire</span>.<span class="type">Method</span> &#123;</span><br><span class="line">      <span class="keyword">switch</span> <span class="keyword">self</span> &#123; </span><br><span class="line">      <span class="keyword">case</span> .<span class="type">GetPublic</span>:</span><br><span class="line">        <span class="keyword">return</span> .<span class="type">GET</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">      </span><br><span class="line">    <span class="keyword">let</span> result: (path: <span class="type">String</span>, parameters: [<span class="type">String</span>: <span class="type">AnyObject</span>]?) = &#123; </span><br><span class="line">      <span class="keyword">switch</span> <span class="keyword">self</span> &#123;</span><br><span class="line">      <span class="keyword">case</span> .<span class="type">GetPublic</span>:</span><br><span class="line">        <span class="keyword">return</span> (<span class="string">"/gists/public"</span>, <span class="literal">nil</span>) </span><br><span class="line">      &#125;</span><br><span class="line">    &#125;()</span><br><span class="line">      </span><br><span class="line">    <span class="keyword">let</span> <span class="type">URL</span> = <span class="type">NSURL</span>(string: <span class="type">GistRouter</span>.baseURLString)!</span><br><span class="line">    <span class="keyword">let</span> <span class="type">URLRequest</span> = <span class="type">NSMutableURLRequest</span>(<span class="type">URL</span>: <span class="type">URL</span>.<span class="type">URLByAppendingPathComponent</span>(result.path)) </span><br><span class="line">      </span><br><span class="line">    <span class="keyword">let</span> encoding = <span class="type">Alamofire</span>.<span class="type">ParameterEncoding</span>.<span class="type">JSON</span></span><br><span class="line">    <span class="keyword">let</span> (encodedRequest, <span class="number">_</span>) = encoding.encode(<span class="type">URLRequest</span>, parameters: result.parameters) </span><br><span class="line">      </span><br><span class="line">    encodedRequest.<span class="type">HTTPMethod</span> = method.rawValue</span><br><span class="line">      </span><br><span class="line">    <span class="keyword">return</span> encodedRequest  </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>获取公共的gists：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">printPublicGists</span><span class="params">()</span></span> -&gt; <span class="type">Void</span> &#123; </span><br><span class="line">  <span class="type">Alamofire</span>.request(<span class="type">GistRouter</span>.<span class="type">GetPublic</span>())</span><br><span class="line">    .responseString &#123; response <span class="keyword">in</span></span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">let</span> receivedString = response.result.value &#123;</span><br><span class="line">        <span class="built_in">print</span>(receivedString)</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>为了可以测试该代码，你需要修改<code>MasterViewController</code>的<code>viewDidAppear</code>方法。该方法在每次主视图显示的时候都会调用：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">viewDidAppear</span><span class="params">(animated: Bool)</span></span> &#123; </span><br><span class="line">  <span class="keyword">super</span>.viewDidAppear(animated)</span><br><span class="line">  <span class="comment">// 开始测试</span></span><br><span class="line">  <span class="type">GitHubAPIManager</span>.sharedInstance.printPublicGists() </span><br><span class="line">  <span class="comment">// 结束测试</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>保存并运行。在模拟器或者你的手机上你将看到一个空的表格视图。但，如果API调用成功，你会在屏幕的底部(控制台)看到打印出的JSON数据：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">"[&#123;\"url\":\"https://api.github.com/gists/35877917945abf44fc7a\",\"forks_url\":\"https://a\ pi.github.com/gists/35877917945abf44fc7a/forks\",\"commits_url\":\"https://api.github.com/\ gists/35877917945abf44fc7a/commits\",\"id\":\"35877917945abf44fc7a\",\"git_pull_url\":\"ht\ tps://gist.github.com/35877917945abf44fc7a.git\",\"git_push_url\":\"https://gist.github.co\ m/35877917945abf44fc7a.git\",\"html_url\":\ ...</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在你的API管理器中添加一个与<code>printPublicGists</code>类似的方法。它将获取到一个对象数组，并在控制台中打印。</p>
+</blockquote>
+<h2 id="2-解析API返回的JSON数据"><a href="#2-解析API返回的JSON数据" class="headerlink" title="2. 解析API返回的JSON数据"></a>2. 解析API返回的JSON数据</h2><p>API调用返回了一个包含gists数组的JSON对象。在<a href="https://developer.github.com/v3/gists/" target="_blank" rel="external">API docs for gists</a>中描述了JSON对象的格式，包含了gists的作者信息、所包含的文件信息及历史版本信息等：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  "url": "https://api.github.com/gists/aa5a315d61ae9438b18d",</span><br><span class="line">  "forks_url": "https://api.github.com/gists/aa5a315d61ae9438b18d/forks",</span><br><span class="line">  "commits_url": "https://api.github.com/gists/aa5a315d61ae9438b18d/commits",</span><br><span class="line">  "id": "aa5a315d61ae9438b18d",</span><br><span class="line">  "description": "description of gist",</span><br><span class="line">  "public": true,</span><br><span class="line">  "owner": &#123;</span><br><span class="line">    "login": "octocat",</span><br><span class="line">    "id": 1,</span><br><span class="line">    "avatar_url": "https://github.com/images/error/octocat_happy.gif",</span><br><span class="line">    "gravatar_id": "",</span><br><span class="line">    "url": "https://api.github.com/users/octocat",</span><br><span class="line">    "html_url": "https://github.com/octocat",</span><br><span class="line">    "followers_url": "https://api.github.com/users/octocat/followers",</span><br><span class="line">    "following_url": "https://api.github.com/users/octocat/following&#123;/other_user&#125;",</span><br><span class="line">    "gists_url": "https://api.github.com/users/octocat/gists&#123;/gist_id&#125;",</span><br><span class="line">    "starred_url": "https://api.github.com/users/octocat/starred&#123;/owner&#125;&#123;/repo&#125;",</span><br><span class="line">    "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",</span><br><span class="line">    "organizations_url": "https://api.github.com/users/octocat/orgs",</span><br><span class="line">    "repos_url": "https://api.github.com/users/octocat/repos",</span><br><span class="line">    "events_url": "https://api.github.com/users/octocat/events&#123;/privacy&#125;",</span><br><span class="line">    "received_events_url": "https://api.github.com/users/octocat/received_events",</span><br><span class="line">    "type": "User",</span><br><span class="line">    "site_admin": false</span><br><span class="line">  &#125;,</span><br><span class="line">  "user": null,</span><br><span class="line">  "files": &#123;</span><br><span class="line">    "ring.erl": &#123;</span><br><span class="line">      "size": 932,</span><br><span class="line">      "raw_url": "https://gist.githubusercontent.com/raw/365370/8c4d2d43d178df44f4c03a7f2ac0ff512853564e/ring.erl",</span><br><span class="line">      "type": "text/plain",</span><br><span class="line">      "language": "Erlang",</span><br><span class="line">      "truncated": false,</span><br><span class="line">      "content": "contents of gist"</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  "truncated": false,</span><br><span class="line">  "comments": 0,</span><br><span class="line">  "comments_url": "https://api.github.com/gists/aa5a315d61ae9438b18d/comments/",</span><br><span class="line">  "html_url": "https://gist.github.com/aa5a315d61ae9438b18d",</span><br><span class="line">  "git_pull_url": "https://gist.github.com/aa5a315d61ae9438b18d.git",</span><br><span class="line">  "git_push_url": "https://gist.github.com/aa5a315d61ae9438b18d.git",</span><br><span class="line">  "created_at": "2010-04-14T02:15:15Z",</span><br><span class="line">  "updated_at": "2011-06-20T11:34:15Z",</span><br><span class="line">  "forks": [</span><br><span class="line">    &#123;</span><br><span class="line">      "user": &#123;</span><br><span class="line">        "login": "octocat",</span><br><span class="line">        "id": 1,</span><br><span class="line">        "avatar_url": "https://github.com/images/error/octocat_happy.gif",</span><br><span class="line">        "gravatar_id": "",</span><br><span class="line">        "url": "https://api.github.com/users/octocat",</span><br><span class="line">        "html_url": "https://github.com/octocat",</span><br><span class="line">        "followers_url": "https://api.github.com/users/octocat/followers",</span><br><span class="line">        "following_url": "https://api.github.com/users/octocat/following&#123;/other_user&#125;",</span><br><span class="line">        "gists_url": "https://api.github.com/users/octocat/gists&#123;/gist_id&#125;",</span><br><span class="line">        "starred_url": "https://api.github.com/users/octocat/starred&#123;/owner&#125;&#123;/repo&#125;",</span><br><span class="line">        "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",</span><br><span class="line">        "organizations_url": "https://api.github.com/users/octocat/orgs",</span><br><span class="line">        "repos_url": "https://api.github.com/users/octocat/repos",</span><br><span class="line">        "events_url": "https://api.github.com/users/octocat/events&#123;/privacy&#125;",</span><br><span class="line">        "received_events_url": "https://api.github.com/users/octocat/received_events",</span><br><span class="line">        "type": "User",</span><br><span class="line">        "site_admin": false</span><br><span class="line">      &#125;,</span><br><span class="line">      "url": "https://api.github.com/gists/dee9c42e4998ce2ea439",</span><br><span class="line">      "id": "dee9c42e4998ce2ea439",</span><br><span class="line">      "created_at": "2011-04-14T16:00:49Z",</span><br><span class="line">      "updated_at": "2011-04-14T16:00:49Z"</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">  "history": [</span><br><span class="line">    &#123;</span><br><span class="line">      "url": "https://api.github.com/gists/aa5a315d61ae9438b18d/57a7f021a713b1c5a6a199b54cc514735d2d462f",</span><br><span class="line">      "version": "57a7f021a713b1c5a6a199b54cc514735d2d462f",</span><br><span class="line">      "user": &#123;</span><br><span class="line">        "login": "octocat",</span><br><span class="line">        "id": 1,</span><br><span class="line">        "avatar_url": "https://github.com/images/error/octocat_happy.gif",</span><br><span class="line">        "gravatar_id": "",</span><br><span class="line">        "url": "https://api.github.com/users/octocat",</span><br><span class="line">        "html_url": "https://github.com/octocat",</span><br><span class="line">        "followers_url": "https://api.github.com/users/octocat/followers",</span><br><span class="line">        "following_url": "https://api.github.com/users/octocat/following&#123;/other_user&#125;",</span><br><span class="line">        "gists_url": "https://api.github.com/users/octocat/gists&#123;/gist_id&#125;",</span><br><span class="line">        "starred_url": "https://api.github.com/users/octocat/starred&#123;/owner&#125;&#123;/repo&#125;",</span><br><span class="line">        "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",</span><br><span class="line">        "organizations_url": "https://api.github.com/users/octocat/orgs",</span><br><span class="line">        "repos_url": "https://api.github.com/users/octocat/repos",</span><br><span class="line">        "events_url": "https://api.github.com/users/octocat/events&#123;/privacy&#125;",</span><br><span class="line">        "received_events_url": "https://api.github.com/users/octocat/received_events",</span><br><span class="line">        "type": "User",</span><br><span class="line">        "site_admin": false</span><br><span class="line">      &#125;,</span><br><span class="line">      "change_status": &#123;</span><br><span class="line">        "deletions": 0,</span><br><span class="line">        "additions": 180,</span><br><span class="line">        "total": 180</span><br><span class="line">      &#125;,</span><br><span class="line">      "committed_at": "2010-04-14T02:15:15Z"</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接下来我们将把JSON对象转换为Swift对象。首先先创建<code>Gist</code>类，实体对象，用来负责gists。在Xcode添加一个Swift文件，并命名为<code>Gist</code>。在这个文件中我们定义一个<code>Gist</code>类：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Foundation</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Gist</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>查看你的API，并构造一个你希望在表格视图中显示需要的对象模型类。</p>
+</blockquote>
+<p>现在来看看我们需要从JSON对象中解析哪些数据。当然，我们也可以解析全部的数据，但这需要耗费很多精力，而且也没有必要这么做。后面当我们需要的时候，会从JSON中解析更多的数据。</p>
+<p>那，我们需要显示哪些数据呢？表格视图中的单元格有标题、子标题和图像，因此，我们可以使用gist的描述、作者的GitHub的<code>ID</code>以及作者的头像来填充。另外，我们还需要每一个gist的唯一<code>ID</code>和url。所以，我们需要为JSON中的每一个gist解析出这些信息，并创建相应的<code>Gist</code>对象。首先我们在<code>Gist</code>类中添加这些属性：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Gist</span> </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> id: <span class="type">String</span>?</span><br><span class="line">  <span class="keyword">var</span> description: <span class="type">String</span>?</span><br><span class="line">  <span class="keyword">var</span> ownerLogin: <span class="type">String</span>?</span><br><span class="line">  <span class="keyword">var</span> ownerAvatarURL: <span class="type">String</span>?</span><br><span class="line">  <span class="keyword">var</span> url: <span class="type">String</span>?</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>对于你的模型对象，你需要决定从JSON对象中解析哪些属性显示在表格视图中。然后像<code>Gist</code>一样添加相应的属性。</p>
+</blockquote>
+<p>我们希望能够通过JSON对象创建一个<code>Gist</code>实例，为此我们需要为类增加一个构造函数，该函数使用JSON作为参数。这里还需要引入SwiftyJSON库。同时会增加一个简单的构造函数，这样我们在没有调用GitHub API的情况下也可以创建：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> SwiftyJSON</span><br><span class="line">  </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Gist</span> </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> id: <span class="type">String</span>?</span><br><span class="line">  <span class="keyword">var</span> descripion: <span class="type">String</span>?</span><br><span class="line">  <span class="keyword">var</span> ownerLogin: <span class="type">String</span>?</span><br><span class="line">  <span class="keyword">var</span> ownerAvatarURL: <span class="type">String</span>?</span><br><span class="line">  <span class="keyword">var</span> url: <span class="type">String</span>?</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">required</span> <span class="keyword">init</span>(json: <span class="type">JSON</span>) &#123;</span><br><span class="line">    <span class="keyword">self</span>.description = json[<span class="string">"description"</span>].string</span><br><span class="line">    <span class="keyword">self</span>.id = json[<span class="string">"id"</span>].string</span><br><span class="line">    <span class="keyword">self</span>.ownerLogin = json[<span class="string">"owner"</span>].[<span class="string">"login"</span>].string</span><br><span class="line">    <span class="keyword">self</span>.ownerAvatarURL = json[<span class="string">"owner"</span>].[<span class="string">"avatar_url"</span>].string</span><br><span class="line">    <span class="keyword">self</span>.url = json[<span class="string">"url"</span>].string</span><br><span class="line">  &#125;</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">required</span> <span class="keyword">init</span>() &#123;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在你的模型对象类中创建构造函数。如果模型对象中某些属性不是字符串，请参考前面的章节来解析数字和布尔值。如果有一些属性是数组（如：gist中的文件<code>Files</code>）或者日期，这些属性的解析我们将在详细视图页面进行讲解。</p>
+</blockquote>
+<h2 id="3-创建表格视图"><a href="#3-创建表格视图" class="headerlink" title="3. 创建表格视图"></a>3. 创建表格视图</h2><p>现在，我们可以进行写代码了。前面我们使用Xcode创建了一个<code>Master-Detail</code>工程，并默认帮我们创建了一些代码。下面让我们快速看一下<code>MasterViewController</code>已经为我们做了哪些事情。首先是：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MasterViewController</span>: <span class="title">UITableViewController</span> </span>&#123; </span><br><span class="line">  </span><br><span class="line">  <span class="keyword">var</span> detailViewController: <span class="type">DetailViewController</span>? = <span class="literal">nil</span></span><br><span class="line">  <span class="keyword">var</span> objects = [<span class="type">AnyObject</span>]()</span><br></pre></td></tr></table></figure>
+<p>在<code>MasterViewController</code>中有一个<code>DetailViewController</code>属性(该属性是我们在点击视图中的行时帮我们导航到详细页面)，以及一个对象数组。在这里我们首先对象数组更改为<code>Gists</code>数组，这样我们就可以知道在表格视图中要展现的是哪些数据了：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MasterViewController</span>: <span class="title">UITableViewController</span> </span>&#123; </span><br><span class="line">  </span><br><span class="line">  <span class="keyword">var</span> detailViewController: <span class="type">DetailViewController</span>? = <span class="literal">nil</span></span><br><span class="line">  <span class="keyword">var</span> gists = [<span class="type">Gist</span>]()</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>参考上面将这里的数组更改为与你的App相应的名称。</p>
+</blockquote>
+<p>接下来是：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">viewDidLoad</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">super</span>.viewDidLoad()</span><br><span class="line">  <span class="comment">// Do any additional setup after loading the view, typically from a nib. </span></span><br><span class="line">  <span class="keyword">self</span>.navigationItem.leftBarButtonItem = <span class="keyword">self</span>.editButtonItem()</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">let</span> addButton = <span class="type">UIBarButtonItem</span>(barButtonSystemItem: .<span class="type">Add</span>, target: <span class="keyword">self</span>, </span><br><span class="line">    action: <span class="string">"insertNewObject:"</span>)</span><br><span class="line">  <span class="keyword">self</span>.navigationItem.rightBarButtonItem = addButton </span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> <span class="built_in">split</span> = <span class="keyword">self</span>.splitViewController &#123;</span><br><span class="line">    <span class="keyword">let</span> controllers = <span class="built_in">split</span>.viewControllers </span><br><span class="line">    <span class="keyword">self</span>.detailViewController = (controllers[controllers.<span class="built_in">count</span>-<span class="number">1</span>] <span class="keyword">as</span>!</span><br><span class="line">      <span class="type">UINavigationController</span>).topViewController <span class="keyword">as</span>? <span class="type">DetailViewController</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在<code>viewDidLoad</code>方法中往导航栏(navigation bar)中增加了两个按钮：左边增加一个编辑按钮，右边增加一个新建按钮。</p>
+<p>通过<code>detailViewController</code>属性，我们就可以在详情页面中显示用户所选中gist的详细信息。</p>
+<p>然后：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">viewWillAppear</span><span class="params">(animated: Bool)</span></span> &#123; </span><br><span class="line">  <span class="keyword">self</span>.clearsSelectionOnViewWillAppear = <span class="keyword">self</span>.splitViewController!.collapsed </span><br><span class="line">  <span class="keyword">super</span>.viewWillAppear(animated)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在视图显示之前，我们需要调用一下<code>clearsSelectionOnViewWillAppear</code>，这样就可以在我们打开其它页面时仍然保持行的选中状态。这个在iPad的分屏视图中有用，iPhone由于仅使用表格视图，所以该方法没有意义。</p>
+<p>在视图显示的时候我们需要从GitHub中加载数据。因此，可以在<code>viewDidAppear</code>方法中来实现：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">loadGists</span><span class="params">()</span></span> &#123; </span><br><span class="line">  <span class="type">GitHubAPIManager</span>.sharedInstance.printPublicGists()</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">viewDidAppear</span><span class="params">(animated: Bool)</span></span> &#123; </span><br><span class="line">  <span class="keyword">super</span>.viewDidAppear(animated)</span><br><span class="line">  loadGists()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>通常，我们应当在<code>viewWillAppear</code>中来加载数据，这样视图就可以很快的显示。因为后面我们需要检查用户是否已经登录，如果没有，那么会弹出一个登录视图让用户登录，但是，如果当前视图没有显示完毕，是无法加载另外一个视图的。因此，这里我们使用<code>viewDidAppear</code>。</p>
+<p>创建一个类似<code>loadGists</code>的方法来加载你的数据。</p>
+</blockquote>
+<p>后面我们会重构<code>loadGists</code>中的代码，这样就可以得到Gist的数组，并显示到视图中。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">didReceiveMemoryWarning</span><span class="params">()</span></span> &#123; </span><br><span class="line">  <span class="keyword">super</span>.didReceiveMemoryWarning()</span><br><span class="line">  <span class="comment">// Dispose of any resources that can be recreated.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>假如我们有一些很重的资源文件(如：大的图片)或者一些可重建的对象，那么我们就可以在<code>didReceiveMemoryWarning</code>中销毁掉它们，从而能够让我们很优雅的处理低内存告警。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">insertNewObject</span><span class="params">(sender: AnyObject)</span></span> &#123;</span><br><span class="line">  objects.insert(<span class="type">NSDate</span>(), atIndex: <span class="number">0</span>)</span><br><span class="line">  <span class="keyword">let</span> indexPath = <span class="type">NSIndexPath</span>(forRow: <span class="number">0</span>, inSection: <span class="number">0</span>) </span><br><span class="line">  <span class="keyword">self</span>.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .<span class="type">Automatic</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>新建按钮将会调用<code>insertNewObject</code>方法。该方法将创建一个新的对象，并把它添加到表格视图中。这个功能我们要后面很久才会实现，因此这里先弹出一个对话框告诉大家还没有实现该功能：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">insertNewObject</span><span class="params">(sender: AnyObject)</span></span> &#123;</span><br><span class="line">  <span class="keyword">let</span> alert = <span class="type">UIAlertController</span>(title: <span class="string">"Not Implemented"</span>, message:</span><br><span class="line">    <span class="string">"Can't create new gists yet, will implement later"</span>,</span><br><span class="line">    preferredStyle: <span class="type">UIAlertControllerStyle</span>.<span class="type">Alert</span>)</span><br><span class="line">  alert.addAction(<span class="type">UIAlertAction</span>(title: <span class="string">"OK"</span>, style: <span class="type">UIAlertActionStyle</span>.<span class="type">Default</span>,</span><br><span class="line">    handler: <span class="literal">nil</span>))</span><br><span class="line">  <span class="keyword">self</span>.presentViewController(alert, animated: <span class="literal">true</span>, completion: <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接下来就是<code>prepareForSegue</code>方法，该方法将会跳转到详情页面：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MARK: - Segues</span></span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">prepareForSegue</span><span class="params">(segue: UIStoryboardSegue, sender: AnyObject?)</span></span> &#123; </span><br><span class="line">  <span class="keyword">if</span> segue.identifier == <span class="string">"showDetail"</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> indexPath = <span class="keyword">self</span>.tableView.indexPathForSelectedRow &#123; </span><br><span class="line">      <span class="keyword">let</span> object = objects[indexPath.row] <span class="keyword">as</span>! <span class="type">NSDate</span></span><br><span class="line">      <span class="keyword">let</span> controller =</span><br><span class="line">        (segue.destinationViewController <span class="keyword">as</span>!</span><br><span class="line">        <span class="type">UINavigationController</span>).topViewController <span class="keyword">as</span>! <span class="type">DetailViewController</span> </span><br><span class="line">      controller.detailItem = object </span><br><span class="line">      controller.navigationItem.leftBarButtonItem =</span><br><span class="line">        <span class="keyword">self</span>.splitViewController?.displayModeButtonItem() </span><br><span class="line">      controller.navigationItem.leftItemsSupplementBackButton = <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里，我们还是要把通用的对象替换为我们的Gists。另外，我们还需要检查一下转到的视图是否是<code>DetailViewConroller</code>：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MARK: - Segues</span></span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">prepareForSegue</span><span class="params">(segue: UIStoryboardSegue, sender: AnyObject?)</span></span> &#123; </span><br><span class="line">  <span class="keyword">if</span> segue.identifier == <span class="string">"showDetail"</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> indexPath = <span class="keyword">self</span>.tableView.indexPathForSelectedRow &#123;</span><br><span class="line">      <span class="keyword">let</span> gist = gists[indexPath.row] <span class="keyword">as</span> <span class="type">Gist</span></span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">let</span> detailViewController = (segue.destinationViewController <span class="keyword">as</span>!</span><br><span class="line">        <span class="type">UINavigationController</span>).topViewController <span class="keyword">as</span>? </span><br><span class="line">        <span class="type">DetailViewController</span> &#123;</span><br><span class="line">        detailViewController.detailItem = gist </span><br><span class="line">        detailViewController.navigationItem.leftBarButtonItem =</span><br><span class="line">          <span class="keyword">self</span>.splitViewController?.displayModeButtonItem() </span><br><span class="line">        detailViewController.navigationItem.leftItemsSupplementBackButton = <span class="literal">true</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>后面我们会设置详情视图中所要显示的gists。</p>
+<p>接下来的几个方法是告诉表格视图如何进行显示：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MARK: - Table View</span></span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">numberOfSectionsInTableView</span><span class="params">(tableView: UITableView)</span></span> -&gt; <span class="type">Int</span> &#123; </span><br><span class="line">  <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView, </span><br><span class="line">  numberOfRowsInSection section: Int)</span></span> -&gt; <span class="type">Int</span> &#123; </span><br><span class="line">  <span class="keyword">return</span> objects.<span class="built_in">count</span></span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView, cellForRowAtIndexPath indexPath:  </span><br><span class="line">  NSIndexPath)</span></span> -&gt; <span class="type">UITableViewCell</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> cell = tableView.dequeueReusableCellWithIdentifier(<span class="string">"Cell"</span>, forIndexPath: indexPath)  </span><br><span class="line">  <span class="keyword">let</span> object = objects[indexPath.row] <span class="keyword">as</span>! <span class="type">NSDate</span> </span><br><span class="line">  cell.textLabel!.text = object.description </span><br><span class="line">  <span class="keyword">return</span> cell</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>再一次，我们这里需要将对象转换为gists，并且把<code>tableView:cellForRowAIndexPath:indexPath:</code>更改为显示gists的描述和拥有者的ID。后面再来实现如何显示拥有者的头像，因为显示图像需要额外一些处理，这里我们不想因为这个而停下来。</p>
+<p>首先，调整故事板中的表格视图单元格，因为我们需要在上面显示两行文本：</p>
+<ol>
+<li>打开<code>mainStoryboard</code>并选中<code>masterViewController</code>中的<code>Table View</code></li>
+<li>选择表格视图中单元格原型并将类型(‘Style’)属性更改为<code>Subtitle</code>，这样我们就会有两个文本了</li>
+</ol>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_020.png?imageView2/0/h/640" style="width:600px"><br></div>
+
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_030.png?imageView2/0/h/200" style="height:140px"><br></div>
+
+<p>接下来就可以修改代码来显示Gists了：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MARK: - Table View</span></span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">numberOfSectionsInTableView</span><span class="params">(tableView: UITableView)</span></span> -&gt; <span class="type">Int</span> &#123; </span><br><span class="line">  <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView, </span><br><span class="line">  numberOfRowsInSection section: Int)</span></span> -&gt; <span class="type">Int</span> &#123; </span><br><span class="line">  <span class="keyword">return</span> gists.<span class="built_in">count</span></span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView, cellForRowAtIndexPath</span><br><span class="line">  indexPath: NSIndexPath)</span></span> -&gt; <span class="type">UITableViewCell</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> cell = tableView.dequeueReusableCellWithIdentifier(<span class="string">"Cell"</span>, forIndexPath: indexPath)</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">let</span> gist = gists[indexPath.row]</span><br><span class="line">  cell.textLabel!.text = gist.description</span><br><span class="line">  cell.detailTextLabel!.text = gist.ownerLogin</span><br><span class="line">  <span class="comment">// <span class="doctag">TODO:</span> set cell.imageView to display image at gist.ownerAvatarURL</span></span><br><span class="line">  <span class="keyword">return</span> cell</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接下来的代码就是判断gists的可编辑性：删除和创建。现在我们简化一下，先不允许进行修改：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView, canEditRowAtIndexPath indexPath:  </span><br><span class="line">  NSIndexPath)</span></span> -&gt; <span class="type">Bool</span> &#123;</span><br><span class="line">  <span class="comment">// Return false if you do not want the specified item to be editable.</span></span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView, commitEditingStyle editingStyle: </span><br><span class="line">  UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath)</span></span> &#123;</span><br><span class="line">  <span class="keyword">if</span> editingStyle == .<span class="type">Delete</span> &#123;</span><br><span class="line">    objects.removeAtIndex(indexPath.row)</span><br><span class="line">    tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .<span class="type">Fade</span>) </span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> editingStyle == .<span class="type">Insert</span> &#123;</span><br><span class="line">    <span class="comment">// Create a new instance of the appropriate class, insert it into the array,</span></span><br><span class="line">    <span class="comment">// and add a new row to the table view.</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>修改为：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView, canEditRowAtIndexPath indexPath: </span><br><span class="line">  NSIndexPath)</span></span> -&gt; <span class="type">Bool</span> &#123;</span><br><span class="line">  <span class="comment">// Return false if you do not want the specified item to be editable.</span></span><br><span class="line">  <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView, commitEditingStyle editingStyle: </span><br><span class="line">  UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath)</span></span> &#123;</span><br><span class="line">  <span class="keyword">if</span> editingStyle == .<span class="type">Delete</span> &#123;</span><br><span class="line">    gists.removeAtIndex(indexPath.row)</span><br><span class="line">    tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .<span class="type">Fade</span>) </span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> editingStyle == .<span class="type">Insert</span> &#123;</span><br><span class="line">    <span class="comment">// Create a new instance of the appropriate class, insert it into the array,</span></span><br><span class="line">    <span class="comment">// and add a new row to the table view.</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在你可以运行，但是你会发现显示的仍然是一个空白表格视图。为了测试我们可以构建一些假的本地数据而不是从GitHub上请求。修改<code>loadGists()</code>方法，在方法中创建一个gists数组：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">loadGists</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">let</span> gist1 = <span class="type">Gist</span>()</span><br><span class="line">  gist1.description = <span class="string">"The first gist"</span> </span><br><span class="line">  gist1.ownerLogin = <span class="string">"gist1Owner"</span></span><br><span class="line">  <span class="keyword">let</span> gist2 = <span class="type">Gist</span>()</span><br><span class="line">  gist2.description = <span class="string">"The second gist"</span> </span><br><span class="line">  gist2.ownerLogin = <span class="string">"gist2Owner"</span></span><br><span class="line">  <span class="keyword">let</span> gist3 = <span class="type">Gist</span>()</span><br><span class="line">  gist3.description = <span class="string">"The third gist"</span> </span><br><span class="line">  gist3.ownerLogin = <span class="string">"gist3Owner"</span> </span><br><span class="line">  gists = [gist1, gist2, gist3]</span><br><span class="line">  <span class="comment">// Tell the table view to reload</span></span><br><span class="line">  <span class="keyword">self</span>.tableView.reloadData() </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>保存并运行，app界面如下：</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_040.png?imageView2/0/w/400" style="width:320px"><br></div>
+
+<p>当你点击增加按钮时，会弹出一个提示框:</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_050.png?imageView2/0/w/400" style="width:320px"><br></div>
+
+<blockquote>
+<p>像上面一样确保你的对象可以显示在表格视图。</p>
+</blockquote>
+<p>现在表格视图功能应该是没有问题了，那么下面我们恢复<code>loadGists()</code>函数：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">loadGists</span><span class="params">()</span></span> &#123; </span><br><span class="line">  <span class="type">GitHubAPIManager</span>.sharedInstance.printPublicGists()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="4-获取并解析API的响应"><a href="#4-获取并解析API的响应" class="headerlink" title="4. 获取并解析API的响应"></a>4. 获取并解析API的响应</h2><p>回想一下，我们在前面创建的<code>Alamofire.Request</code>的扩展：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">func</span> <span class="title">responseObject</span>&lt;T: ResponseJSONObjectSerializable&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这个扩展用来处理Alamofire的响应，并将返回来的JSON格式数据转换为Swift对象(当然，相应类需要实现<code>ResponseJSONObjectSerializable</code>协议中的初始化方法)。现在我们需要实现的与这个很类似，只不过需要将返回的JSON数组转换为Swift对象数组。因此，我们保留这个协议，并将它添加到工程中。创建一个<code>ResponseJSONObjectSerializable.swift</code>文件，并把协议定义添加进去。在文件中别忘了引入SwiftyJSON库：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Foundation</span><br><span class="line"><span class="keyword">import</span> SwiftyJSON</span><br><span class="line">  </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">protocol</span> <span class="title">ResponseJSONObjectSerializable</span> </span>&#123; </span><br><span class="line">  <span class="keyword">init</span>?(json: <span class="type">SwiftyJSON</span>.<span class="type">JSON</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后修改<code>Gist</code>类，实现该协议(注意，我们前面已经实现了相应的构造方法)：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Gist</span>: <span class="title">ResponseJSONObjectSerializable</span> </span>&#123; </span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们也把<code>responseObject</code>函数拷贝进来，因为后面会使用到它。创建<code>AlamofireRequest+JSONSerializable.swift</code>文件，因为，它是<code>Alamofire.Request</code>的扩展，并且也承担了JSON的序列化处理：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">func</span> <span class="title">responseObject</span>&lt;T: ResponseJSONObjectSerializable&gt;<span class="params">(completionHandler: </span><br><span class="line">  Response&lt;T, NSError&gt; -&gt; Void)</span></span> -&gt; <span class="type">Self</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> serializer = <span class="type">ResponseSerializer</span>&lt;<span class="type">T</span>, <span class="type">NSError</span>&gt; &#123; request, response, data, error <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">guard</span> error == <span class="literal">nil</span> <span class="keyword">else</span> &#123; </span><br><span class="line">      <span class="keyword">return</span> .<span class="type">Failure</span>(error!)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">guard</span> <span class="keyword">let</span> responseData = data <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">let</span> failureReason = <span class="string">"无法进行对象序列化，因为输入的数据为空。"</span> </span><br><span class="line">      <span class="keyword">let</span> error = <span class="type">Error</span>.errorWithCode(.<span class="type">DataSerializationFailed</span>,</span><br><span class="line">        failureReason: failureReason) <span class="keyword">return</span> .<span class="type">Failure</span>(error)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> <span class="type">JSONResponseSerializer</span> = <span class="type">Request</span>.<span class="type">JSONResponseSerializer</span>(options: .<span class="type">AllowFragments</span>) </span><br><span class="line">    <span class="keyword">let</span> result = <span class="type">JSONResponseSerializer</span>.serializeResponse(request, response,</span><br><span class="line">      responseData, error)</span><br><span class="line">      </span><br><span class="line">    <span class="keyword">switch</span> result &#123;</span><br><span class="line">    <span class="keyword">case</span> .<span class="type">Success</span>(<span class="keyword">let</span> value):</span><br><span class="line">      <span class="keyword">let</span> json = <span class="type">SwiftyJSON</span>.<span class="type">JSON</span>(value) </span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">let</span> object = <span class="type">T</span>(json: json) &#123;</span><br><span class="line">        <span class="keyword">return</span> .<span class="type">Success</span>(object) </span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> failureReason = <span class="string">"无法通过JSON创建对象"</span> </span><br><span class="line">        <span class="keyword">let</span> error = <span class="type">Error</span>.errorWithCode(.<span class="type">JSONSerializationFailed</span>,</span><br><span class="line">          failureReason: failureReason)</span><br><span class="line">        <span class="keyword">return</span> .<span class="type">Failure</span>(error) </span><br><span class="line">      &#125;</span><br><span class="line">    <span class="keyword">case</span> .<span class="type">Failure</span>(<span class="keyword">let</span> error): </span><br><span class="line">      <span class="keyword">return</span> .<span class="type">Failure</span>(error)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> response(responseSerializer: serializer, completionHandler: completionHandler) </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们的需求和这个类似，只不过返回的是<code>[T]</code>对象数组，而不是一个<code>[T]</code>对象：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Alamofire</span>.<span class="title">Request</span> </span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">func</span> <span class="title">responseObject</span>&lt;T: ResponseJSONObjectSerializable&gt;<span class="params">(completionHandler:</span><br><span class="line">    Response&lt;T, NSError&gt; -&gt; Void)</span></span> -&gt; <span class="type">Self</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> serializer = <span class="type">ResponseSerializer</span>&lt;<span class="type">T</span>, <span class="type">NSError</span>&gt; &#123;</span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">return</span> response(responseSerializer: serializer, completionHandler: completionHandler) </span><br><span class="line">  &#125;</span><br><span class="line">      </span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">func</span> <span class="title">responseArray</span>&lt;T: ResponseJSONObjectSerializable&gt;<span class="params">(completionHandler: </span><br><span class="line">    Response&lt;[T], NSError&gt; -&gt; Void)</span></span> -&gt; <span class="type">Self</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> serializer = <span class="type">ResponseSerializer</span>&lt;[<span class="type">T</span>], <span class="type">NSError</span>&gt; &#123;</span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">      </span><br><span class="line">    <span class="keyword">return</span> response(responseSerializer: serializer, completionHandler: completionHandler) </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>具体实现也很类似：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">func</span> <span class="title">responseArray</span>&lt;T: ResponseJSONObjectSerializable&gt;<span class="params">(</span><br><span class="line">  completionHandler: Response&lt;[T], NSError&gt; -&gt; Void)</span></span> -&gt; <span class="type">Self</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> serializer = <span class="type">ResponseSerializer</span>&lt;[<span class="type">T</span>], <span class="type">NSError</span>&gt; &#123; request, response, data, error <span class="keyword">in</span> </span><br><span class="line">    <span class="keyword">guard</span> error == <span class="literal">nil</span> <span class="keyword">else</span> &#123; </span><br><span class="line">      <span class="keyword">return</span> .<span class="type">Failure</span>(error!)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">guard</span> <span class="keyword">let</span> responseData = data <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">let</span> failureReason = <span class="string">"无法解析为数组，因为输入的数据为空。"</span> </span><br><span class="line">      <span class="keyword">let</span> error = <span class="type">Error</span>.errorWithCode(.<span class="type">DataSerializationFailed</span>,</span><br><span class="line">        failureReason: failureReason) </span><br><span class="line">      <span class="keyword">return</span> .<span class="type">Failure</span>(error)</span><br><span class="line">    &#125;</span><br><span class="line">      </span><br><span class="line">    <span class="keyword">let</span> <span class="type">JSONResponseSerializer</span> = <span class="type">Request</span>.<span class="type">JSONResponseSerializer</span>(options: .<span class="type">AllowFragments</span>) </span><br><span class="line">    <span class="keyword">let</span> result = <span class="type">JSONResponseSerializer</span>.serializeResponse(request, response,</span><br><span class="line">      responseData, error)</span><br><span class="line">      </span><br><span class="line">    <span class="keyword">switch</span> result &#123;</span><br><span class="line">    <span class="keyword">case</span> .<span class="type">Success</span>(<span class="keyword">let</span> value):</span><br><span class="line">      <span class="keyword">let</span> json = <span class="type">SwiftyJSON</span>.<span class="type">JSON</span>(value) </span><br><span class="line">      <span class="keyword">var</span> objects: [<span class="type">T</span>] = []</span><br><span class="line">      <span class="keyword">for</span> (<span class="number">_</span>, item) <span class="keyword">in</span> json &#123;</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> object = <span class="type">T</span>(json: item) &#123; </span><br><span class="line">          objects.append(object)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> .<span class="type">Success</span>(objects) </span><br><span class="line">    <span class="keyword">case</span> .<span class="type">Failure</span>(<span class="keyword">let</span> error):</span><br><span class="line">      <span class="keyword">return</span> .<span class="type">Failure</span>(error) </span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">   </span><br><span class="line">  <span class="keyword">return</span> response(responseSerializer: serializer, completionHandler: completionHandler) </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最大的不同点就是我们循环json中的每个元素<code>for (_, item) in json</code>，并为它创建相应的对象:<code>let object = T(json: item)</code>。如果对象创建成功则把它添加到数组中。</p>
+<p>现在，我们需要：</p>
+<ol>
+<li>完成我们的函数使其获取公共的gists，并把返回值解析为一个数组</li>
+<li>将函数更改为返回gists数组并传给表格视图</li>
+</ol>
+<p><code>getPublicGists</code>函数看起来很像之前的<code>printPulicGists</code>：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">printPublicGists</span><span class="params">()</span></span> -&gt; <span class="type">Void</span> &#123; </span><br><span class="line">  <span class="type">Alamofire</span>.request(<span class="type">GistRouter</span>.<span class="type">GetPublic</span>())</span><br><span class="line">    .responseString &#123; response <span class="keyword">in</span></span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">let</span> receivedString = response.result.value &#123;</span><br><span class="line">        <span class="built_in">print</span>(receivedString)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最大的不同就是将打印替换为返回一个数组。因此，我们把<code>responseString</code>替换为<code>responseArray</code>。现在我们可以把这个函数加入到<code>GitHubAPIManager</code>中了：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">getPublicGists</span><span class="params">()</span></span> -&gt; <span class="type">Void</span> &#123; </span><br><span class="line">  <span class="type">Alamofire</span>.request(<span class="type">GistRouter</span>.<span class="type">GetPublic</span>())</span><br><span class="line">    .responseArray &#123;</span><br><span class="line">      ...</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这看起来有点奇怪。我们前面不是说要返回一个数组么，但这里返回的是<code>Void</code>啊。嗯，是的，这是因为API的调用是异步的，我们发起一个请求，然后当请求处理完毕后我们会收到一个通知。我们可以将这个处理放在完成处理程序中。下面我们来添加一个块代码，这样当请求处理完毕后就可以调用了。我们的完成处理程序需要处理两种可能：一种情况是正确返回了一个Gists数组，另外一种情况就是返回了一个错误。</p>
+<p>完成处理程序的签名是<code>(Result&lt;T&gt;, NSError)</code>。它是Alamofire所创建的一个指定对象，这样可以让我们在<code>.Success</code>情况下返回一个Gists数组，在<code>.Failure</code>情况下返回一个错误。</p>
+<p>因此我们发送请求后，将响应序列化器(response serializer)设置为我们上面所创建的<code>responseArray</code>。然后在调用成功后返回Gists数组，或者失败时返回一个错误：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">getPublicGists</span><span class="params">(completionHandler: <span class="params">(Result&lt;[Gist], NSError&gt;)</span></span></span> -&gt; <span class="type">Void</span>) &#123;</span><br><span class="line">  <span class="type">Alamofire</span>.request(.<span class="type">GET</span>, <span class="string">"https://api.github.com/gists/public"</span>)</span><br><span class="line">    .responseArray &#123; (response:<span class="type">Response</span>&lt;[<span class="type">Gist</span>], <span class="type">NSError</span>&gt;) <span class="keyword">in</span> </span><br><span class="line">      ...</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因为<code>responseArray</code>的完成处理程序返回的数组参数中是一个泛型对象，因此我们需要修改让它明确返回的对象类型，因此将参数修改为:<code>Respoonse&lt;[Gist], NSError&gt;</code>。否则当数据返回时将不知道如何创建相应的对象。</p>
+<p><code>getPublicGists</code>的完成处理程序匹配<code>responseArray</code>中的一个，并不需要在这里处理任何错误。因此，在<code>.responseArray</code>的块(block)中只需要调用完成处理程序即可。对于错误的处理则是调用者需要关心的事：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">getPublicGists</span><span class="params">(completionHandler: <span class="params">(Result&lt;[Gist], NSError&gt;)</span></span></span> -&gt; <span class="type">Void</span>)&#123; </span><br><span class="line">  <span class="type">Alamofire</span>.request(<span class="type">GistRouter</span>.<span class="type">GetPublic</span>())</span><br><span class="line">    .responseArray &#123; (response:<span class="type">Response</span>&lt;[<span class="type">Gist</span>], <span class="type">NSError</span>&gt;) <span class="keyword">in</span> </span><br><span class="line">      completionHandler(response.result)</span><br><span class="line">  &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>创建一个函数像<code>getPublicGists</code>一样，返回你的业务对象数组。</p>
+</blockquote>
+<p>Ok，现在让我们看看我们需要在什么时候调用<code>getPublicGists</code>。先看看之前在<code>MasterViewController</code>是在如何调用的：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">loadGists</span><span class="params">()</span></span> &#123; </span><br><span class="line">  <span class="type">GitHubAPIManager</span>.sharedInstance.printPublicGists()</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">viewDidAppear</span><span class="params">(animated: Bool)</span></span> &#123; </span><br><span class="line">  <span class="keyword">super</span>.viewDidAppear(animated)</span><br><span class="line">  loadGists()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>看来最好是将<code>printPublicGists()</code>替换为<code>getPublicGist</code>。这个非常容易做：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">loadGists</span><span class="params">()</span></span> &#123; </span><br><span class="line">  <span class="type">GitHubAPIManager</span>.sharedInstance.getPublicGists() &#123; result <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">guard</span> result.error == <span class="literal">nil</span> <span class="keyword">else</span> &#123; </span><br><span class="line">      <span class="built_in">print</span>(result.error)</span><br><span class="line">      <span class="comment">// <span class="doctag">TODO:</span> display error</span></span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> fetchedGists = result.value &#123; </span><br><span class="line">      <span class="keyword">self</span>.gists = fetchedGists  </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">self</span>.tableView.reloadData()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们发起一个异步调用，并返回gists数组。如果成功调用，我们会把gists保存到本地数组变量中，并告诉表格视图使用新的数据刷新显示。简单漂亮！</p>
+<blockquote>
+<p>创建你的<code>loadGists</code>方法，并调用之前你的<code>getPublicGists</code>方法，把返回的结果保存到数组对象中，这样你的<code>MasterViewConroller</code>就可以将它们显示到表格视图中了。</p>
+</blockquote>
+<p>现在API调用和表格视图已经很好的整合了。保存并运行看看效果。</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_060.png?imageView2/0/w/400" style="width:320px"><br></div>
+
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>到这里我们已经完成了app的核心功能。下面我们逐步添加以下功能：</p>
+<ul>
+<li>在单元格中显示图片</li>
+<li>当滚动时加载更多Gists</li>
+<li>下拉刷新</li>
+<li>Gists的详细视图</li>
+<li>删除Gists</li>
+<li>新建Gists</li>
+</ul>
+<p>GitHub上本章的代码:<a href="https://github.com/cmoulton/grokSwiftREST_v1.1/releases/tag/tableview" target="_blank" rel="external">tableview</a>。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ios/" rel="tag">#ios</a>
+          
+            <a href="/tags/swift/" rel="tag">#swift</a>
+          
+            <a href="/tags/REST/" rel="tag">#REST</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/06/17/appWithRest-4/" rel="next" title="iOS Apps with REST APIs(四)">
+                <i class="fa fa-chevron-left"></i> iOS Apps with REST APIs(四)
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/07/02/appWithRest-6/" rel="prev" title="iOS Apps with REST APIs(六)">
+                iOS Apps with REST APIs(六) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/06/30/appWithRest-5/"
+     data-title="iOS Apps with REST APIs(五)"
+     data-content=""
+     data-url="http://cd826.github.io/2016/06/30/appWithRest-5/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/06/30/appWithRest-5/"
+           data-title="iOS Apps with REST APIs(五)" data-url="http://cd826.github.io/2016/06/30/appWithRest-5/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpg"
+               alt="cd826Dong" />
+          <p class="site-author-name" itemprop="name">cd826Dong</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">15</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么使用像Alamofire这样的库"><span class="nav-number">1.</span> <span class="nav-text">为什么使用像Alamofire这样的库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#连接REST-API和表格视图"><span class="nav-number">2.</span> <span class="nav-text">连接REST API和表格视图</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-创建Swift工程"><span class="nav-number">2.1.</span> <span class="nav-text">1. 创建Swift工程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-解析API返回的JSON数据"><span class="nav-number">2.2.</span> <span class="nav-text">2. 解析API返回的JSON数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-创建表格视图"><span class="nav-number">2.3.</span> <span class="nav-text">3. 创建表格视图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-获取并解析API的响应"><span class="nav-number">2.4.</span> <span class="nav-text">4. 获取并解析API的响应</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小结"><span class="nav-number">3.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">cd826Dong</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"cd826"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

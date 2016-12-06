@@ -1,0 +1,763 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="ios,swift,REST," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="重要说明: 这是一个系列教程，非本人原创，而是翻译国外的一个教程。本人也在学习Swift，看到这个教程对开发一个实际的APP非常有帮助，所以翻译共享给大家。原教程非常长，我会陆续翻译并发布，欢迎交流与分享。
+
+如果你是基于REST API来构建一个APP，或许在某些调用的地方需要进行验证。更甚者需要在所有的调用中都需要认证。在使用GitHub API时，我们会给出两种验证方式：基本验证(基于用户">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS Apps with REST APIs(八) -- 基于OAuth2.0认证(上)">
+<meta property="og:url" content="http://cd826.github.io/2016/08/02/appWithRest-8/index.html">
+<meta property="og:site_name" content="CD826Workshop">
+<meta property="og:description" content="重要说明: 这是一个系列教程，非本人原创，而是翻译国外的一个教程。本人也在学习Swift，看到这个教程对开发一个实际的APP非常有帮助，所以翻译共享给大家。原教程非常长，我会陆续翻译并发布，欢迎交流与分享。
+
+如果你是基于REST API来构建一个APP，或许在某些调用的地方需要进行验证。更甚者需要在所有的调用中都需要认证。在使用GitHub API时，我们会给出两种验证方式：基本验证(基于用户">
+<meta property="og:updated_time" content="2016-08-02T14:20:43.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS Apps with REST APIs(八) -- 基于OAuth2.0认证(上)">
+<meta name="twitter:description" content="重要说明: 这是一个系列教程，非本人原创，而是翻译国外的一个教程。本人也在学习Swift，看到这个教程对开发一个实际的APP非常有帮助，所以翻译共享给大家。原教程非常长，我会陆续翻译并发布，欢迎交流与分享。
+
+如果你是基于REST API来构建一个APP，或许在某些调用的地方需要进行验证。更甚者需要在所有的调用中都需要认证。在使用GitHub API时，我们会给出两种验证方式：基本验证(基于用户">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> iOS Apps with REST APIs(八) -- 基于OAuth2.0认证(上) | CD826Workshop </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?317a9862593d085ce8f8aa660d633b05";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">CD826Workshop</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Talk is cheap, show me the code.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                iOS Apps with REST APIs(八) -- 基于OAuth2.0认证(上)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-02T18:32:00+08:00" content="2016-08-02">
+              2016-08-02
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/swift/" itemprop="url" rel="index">
+                    <span itemprop="name">swift</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/swift/REST/" itemprop="url" rel="index">
+                    <span itemprop="name">REST</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/02/appWithRest-8/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/02/appWithRest-8/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>重要说明: 这是一个系列教程，非本人原创，而是翻译国外的一个教程。本人也在学习Swift，看到这个教程对开发一个实际的APP非常有帮助，所以翻译共享给大家。原教程非常长，我会陆续翻译并发布，欢迎交流与分享。</p>
+</blockquote>
+<p>如果你是基于REST API来构建一个APP，或许在某些调用的地方需要进行验证。更甚者需要在所有的调用中都需要认证。在使用GitHub API时，我们会给出两种验证方式：基本验证(基于用户名／密码)和OAuth2.0验证。但是对于我们构建的gists APP将只使用OAuth2.0验证。但后面也会讲到使用<a href="https://www.mashape.com/" target="_blank" rel="external">Mashape</a>进行header/token验证。</p>
+<h2 id="GitHub-API文档"><a href="#GitHub-API文档" class="headerlink" title="GitHub API文档"></a>GitHub API文档</h2><p>如果你喜欢深挖文档，那么你可以看一下<a href="https://developer.github.com/v3/#authentication" target="_blank" rel="external">GitHub API中认证部分</a>。</p>
+<p>我们在查看文档的时候可以发现下面几个关键点：</p>
+<ol>
+<li>GitHub API的验证支持使用基础验证(Basic Auth)和OAuth2.0</li>
+<li>如果尝试使用无效的凭据进行认证，将会得到`401 Unauthorized’的错误响应</li>
+<li>在没有认证时如果调用需要认证的请求将会返回<code>404 Not Found</code>错误，在某些地方也可能返回<code>403 Forbidden</code>错误</li>
+</ol>
+<blockquote>
+<p>检查你的开发文档中关于认证要求的章节。并实现本章中与你API相匹配的部分。在本章最后还实现了在您的API管理器中的所需要的身份验证集成。</p>
+</blockquote>
+<a id="more"></a>
+<h2 id="基础认证-用户名-密码"><a href="#基础认证-用户名-密码" class="headerlink" title="基础认证: 用户名/密码"></a>基础认证: 用户名/密码</h2><p>在Gists App中最终我们将使用OAuth2.0进行认证，但这之前先来看看基础认证是如何工作的。在这里，我们只会在控制台中打印API的结果来确认我们是否成功调用，就像之前的<code>printPublicGists</code>函数一样。不过在后面的章节中我们会实现基于OAuth2.0的认证。</p>
+<p>下面让我们先添加一个函数，该函数在基础认证过程中会使用:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GitHubAPIManager</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">  <span class="comment">// MARK: - Basic Auth</span></span><br><span class="line">  <span class="function"><span class="keyword">func</span> <span class="title">printMyStarredGistsWithBasicAuth</span><span class="params">()</span></span> -&gt; <span class="type">Void</span> &#123;</span><br><span class="line">    <span class="comment">// <span class="doctag">TODO:</span> 实现它</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们还得在路由中增加获取已收藏Gists的调用:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">GistRouter</span>: <span class="title">URLRequestConvertible</span> </span>&#123;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">let</span> baseURLString:<span class="type">String</span> = <span class="string">"https://api.github.com"</span></span><br><span class="line">    </span><br><span class="line">  <span class="keyword">case</span> <span class="type">GetPublic</span>() <span class="comment">// GET https://api.github.com/gists/public </span></span><br><span class="line">  <span class="keyword">case</span> <span class="type">GetMyStarred</span>() <span class="comment">// GET https://api.github.com/gists/starred</span></span><br><span class="line">    </span><br><span class="line">  <span class="keyword">case</span> <span class="type">GetAtPath</span>(<span class="type">String</span>) <span class="comment">// GET at given path</span></span><br><span class="line">  <span class="keyword">var</span> <span class="type">URLRequest</span>: <span class="type">NSMutableURLRequest</span> &#123; </span><br><span class="line">    <span class="keyword">var</span> method: <span class="type">Alamofire</span>.<span class="type">Method</span> &#123;</span><br><span class="line">      <span class="keyword">switch</span> <span class="keyword">self</span> &#123; </span><br><span class="line">      <span class="keyword">case</span> .<span class="type">GetPublic</span>:</span><br><span class="line">        <span class="keyword">return</span> .<span class="type">GET</span></span><br><span class="line">      <span class="keyword">case</span> .<span class="type">GetMyStarred</span>:</span><br><span class="line">        <span class="keyword">return</span> .<span class="type">GET</span> </span><br><span class="line">      <span class="keyword">case</span> .<span class="type">GetAtPath</span>:</span><br><span class="line">        <span class="keyword">return</span> .<span class="type">GET</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> result: (path: <span class="type">String</span>, parameters: [<span class="type">String</span>: <span class="type">AnyObject</span>]?) = &#123; </span><br><span class="line">      <span class="keyword">switch</span> <span class="keyword">self</span> &#123;</span><br><span class="line">      <span class="keyword">case</span> .<span class="type">GetPublic</span>:</span><br><span class="line">        <span class="keyword">return</span> (<span class="string">"/gists/public"</span>, <span class="literal">nil</span>) </span><br><span class="line">      <span class="keyword">case</span> .<span class="type">GetMyStarred</span>:</span><br><span class="line">        <span class="keyword">return</span> (<span class="string">"/gists/starred"</span>, <span class="literal">nil</span>) </span><br><span class="line">      <span class="keyword">case</span> .<span class="type">GetAtPath</span>(<span class="keyword">let</span> path):</span><br><span class="line">        <span class="keyword">let</span> <span class="type">URL</span> = <span class="type">NSURL</span>(string: path)</span><br><span class="line">        <span class="keyword">let</span> relativePath = <span class="type">URL</span>!.relativePath! </span><br><span class="line">        <span class="keyword">return</span> (relativePath, <span class="literal">nil</span>)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="type">URL</span> = <span class="type">NSURL</span>(string: <span class="type">GistRouter</span>.baseURLString)!</span><br><span class="line">    <span class="keyword">let</span> <span class="type">URLRequest</span> = <span class="type">NSMutableURLRequest</span>(<span class="type">URL</span>: <span class="type">URL</span>.<span class="type">URLByAppendingPathComponent</span>(result.path))</span><br><span class="line">    <span class="keyword">let</span> encoding = <span class="type">Alamofire</span>.<span class="type">ParameterEncoding</span>.<span class="type">JSON</span></span><br><span class="line">    <span class="keyword">let</span> (encodedRequest, <span class="number">_</span>) = encoding.encode(<span class="type">URLRequest</span>, parameters: result.parameters)</span><br><span class="line">      </span><br><span class="line">    encodedRequest.<span class="type">HTTPMethod</span> = method.rawValue</span><br><span class="line">    <span class="keyword">return</span> encodedRequest </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先，让我们像调用公共gists一样来调用(在没有任何认证的情况下)看看会发生什么。修改<code>GitHubAPIController</code>:<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">printMyStarredGistsWithBasicAuth</span><span class="params">()</span></span> -&gt; <span class="type">Void</span> &#123; </span><br><span class="line">  <span class="type">Alamofire</span>.request(<span class="type">GistRouter</span>.<span class="type">GetMyStarred</span>()) </span><br><span class="line">  .responseString &#123; response <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> receivedString = response.result.value &#123; </span><br><span class="line">      <span class="built_in">print</span>(receivedString)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>并在<code>MasterViewController</code>修改<code>viewDidAppear</code>测试这个函数:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">viewDidAppear</span><span class="params">(animated: Bool)</span></span> &#123; </span><br><span class="line">  <span class="keyword">super</span>.viewDidAppear(animated) </span><br><span class="line">  loadGists(<span class="literal">nil</span>)</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// TEST</span></span><br><span class="line">  <span class="type">GitHubAPIManager</span>.sharedInstance.printMyStarredGistsWithBasicAuth()</span><br><span class="line">  <span class="comment">// END TEST</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>保存并运行，控制台中将会打印下面的错误出来:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"message"</span>:<span class="string">"Requires authentication"</span>,</span><br><span class="line">  <span class="string">"documentation_url"</span>:<span class="string">"https://developer.github.com/v3/#authentication"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>就像文档中所说的，我们需要增加认证信息。最简单的方式就是使用<a href="https://en.wikipedia.org/wiki/Basic_access_authentication" target="_blank" rel="external">基础认证(Basic Authentication)</a>，通过提供用户名和密码进行认证。基础认证要求在<code>Authorization</code>报头中包含用户名和密码，格式为：<code>username:password</code>，并使用<code>base64</code>进行编码。</p>
+<blockquote>
+<p>Base64编码是一个非常简单的编码方式，它将数据编译成二进制数据，并以文本的方式进行发送。这种类型的编码不提供额外的安全性，因为它仅仅是一个编码，而不是加密。那，为什么基本身份验证时，还要对已经是文本的用户名和密码进行编码呢？其实这个主要的原因是对一些奇怪的字符进行编码，以防止引起HTTP请求问题。</p>
+</blockquote>
+<p>下面让我们先把认证凭据进行<code>Base64</code>编码，让后添加到<code>Authorization</code>HTTP请求的报头中。这里你要确认使用了你的正确的GitHub的用户名和密码。然后我们把信息添加到在路由中创建的<code>NSMutableURLRequest</code>中：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="type">URL</span> = <span class="type">NSURL</span>(string: <span class="type">GistRouter</span>.baseURLString)!</span><br><span class="line"><span class="keyword">let</span> <span class="type">URLRequest</span> = <span class="type">NSMutableURLRequest</span>(<span class="type">URL</span>: <span class="type">URL</span>.<span class="type">URLByAppendingPathComponent</span>(result.path))</span><br><span class="line"><span class="keyword">let</span> username = <span class="string">"myUsername"</span> </span><br><span class="line"><span class="keyword">let</span> password = <span class="string">"myPassword"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> credentialData = <span class="string">"\(username):\(password)"</span>.dataUsingEncoding(<span class="type">NSUTF8StringEncoding</span>)!    </span><br><span class="line"><span class="keyword">let</span> base64Credentials = credentialData.base64EncodedStringWithOptions([])  </span><br><span class="line"></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>第一步我们先构建所要进行编码的字符串:<code>\(username):\(password)</code>。然后使用通用的<code>NSUTF8StringEncoding</code>将它转换<code>NSData</code>。这一步仅仅是将字符串转换为可以进行<code>Base64</code>编码的二进制数据。最后再使用<code>base64EncodedStringWithOptions</code>函数对数据执行<code>Base64</code>编码。</p>
+<p>那，该如何发送请求的报头呢？你可以查看前面有关报头章节。  </p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="type">URLRequest</span>.setValue(<span class="string">"Basic \(base64Credentials)"</span>, forHTTPHeaderField: <span class="string">"Authorization"</span>) </span><br><span class="line"><span class="keyword">let</span> encoding = <span class="type">Alamofire</span>.<span class="type">ParameterEncoding</span>.<span class="type">JSON</span></span><br><span class="line"><span class="keyword">let</span> (encodedRequest, <span class="number">_</span>) = encoding.encode(<span class="type">URLRequest</span>, parameters: result.parameters) </span><br><span class="line"></span><br><span class="line">encodedRequest.<span class="type">HTTPMethod</span> = method.rawValue</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> encodedRequest</span><br></pre></td></tr></table></figure>
+<p>编译并运行，将得到你所关注Gists的列表(或许运行之前你得先去关注几个Gists)。通过<code>https://gist.github.com/*username*/starred:</code>你将可以得到所关注的Gists列表：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[&#123;<span class="string">"url"</span>:<span class="string">"https://api.github.com/gists/3bbe842793ac3f692775"</span>,<span class="string">"forks_url"</span>:<span class="string">"https://api.githu\</span><br><span class="line">b.com/gists/3bbe842793ac3f692775/forks"</span>,<span class="string">"commits_url"</span>:<span class="string">"https://api.github.com/gists/3bbe84\</span><br><span class="line">2793ac3f692775/commits"</span>,<span class="string">"id"</span>:<span class="string">"3bbe842793ac3f692775"</span>,<span class="string">"git_pull_url"</span>:<span class="string">"https://gist.github.co\</span><br><span class="line">m/3bbe842793ac3f692775.git"</span>,...</span><br></pre></td></tr></table></figure>
+<p>如果你的API，支持使用Alamofire中的<code>.authenticate</code>函数来发送基础认证的凭据，那么会变得非常简单。可惜GitHub的API不支持，因此我们使用<a href="https://httpbin.org/" target="_blank" rel="external">HTTPBIn test API</a>来进行测试。为了测试这个，我们在Alamofire的请求调用中增加<code>.authenticate(user: username, password: password)</code>。该函数将会把认证的需要的信息存放到合适的报头中：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">doGetWithBasicAuth</span><span class="params">()</span></span> -&gt; void &#123;</span><br><span class="line">  <span class="keyword">let</span> username = <span class="string">"myUsername"</span></span><br><span class="line">  <span class="keyword">let</span> password = <span class="string">"myPassword"</span></span><br><span class="line">  <span class="type">Alamofire</span>.request(.<span class="type">GET</span>, <span class="string">"https://httpbin.org/basic-auth/\(username)/\(password)"</span>)</span><br><span class="line">    .authenticate(user: username, password: password) </span><br><span class="line">    .responseString &#123; response <span class="keyword">in</span></span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">let</span> receivedString = response.result.value &#123; </span><br><span class="line">        <span class="built_in">print</span>(receivedString)</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通常你不需要在请求的URL中添加用户名和密码，这里仅仅是为了使用<a href="https://httpbin.org/" target="_blank" rel="external">HTTPBin</a>的测试函数。</p>
+<p>另外，你也可以通过<code>NSURLCredential</code>来传递用户名和密码：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">doGetWithBasicAuthCredential</span><span class="params">()</span></span> -&gt; void &#123; </span><br><span class="line">  <span class="keyword">let</span> username = <span class="string">"myUsername"</span></span><br><span class="line">  <span class="keyword">let</span> password = <span class="string">"myPassword"</span></span><br><span class="line">  </span><br><span class="line">  <span class="keyword">let</span> credential = <span class="type">NSURLCredential</span>(user: username, password: password, persistence: <span class="type">NSURLCredentialPersistence</span>.<span class="type">ForSession</span>)</span><br><span class="line">  <span class="type">Alamofire</span>.request(.<span class="type">GET</span>, <span class="string">"https://httpbin.org/basic-auth/\(username)/\(password)"</span>) </span><br><span class="line">    .authenticate(usingCredential: credential)</span><br><span class="line">    .responseString &#123; response <span class="keyword">in</span></span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">let</span> receivedString = response.result.value &#123; </span><br><span class="line">        <span class="built_in">print</span>(receivedString)</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过<code>NSURLCredentialPersistence</code>可以指定认证凭据的有效期(本次调用、会话期间或者永久)。它也可以和基于证书的认证一起使用。</p>
+<blockquote>
+<p>如果你的API中使用基本的身份验证，那么可以使用凭据以便进行保存。在本章的OAuth章节我们将使用<a href="https://github.com/matthewpalmer/Locksmith" target="_blank" rel="external">Locksmith</a>把敏感的信息保存到iOS的Keychain中。你也许需要增加一个视图来让用户填写用户名和密码，这个可以参考后面的创建章节，看看如何创建一个简单的表单。或许你还要在APP启动的时候，如果没有检测到用户的认证信息，弹出认证对话框。这些和我们在后面做OAuth2.0认证的时候差不多，所以你可以先去那里查看一下如何开始一个登录流程。</p>
+</blockquote>
+<h2 id="HTTP-Header-信息认证"><a href="#HTTP-Header-信息认证" class="headerlink" title="HTTP Header 信息认证"></a>HTTP Header 信息认证</h2><p>有些API支持使用HTTP Header进行身份认证。在<a href="https://www.mashape.com/" target="_blank" rel="external">Mashape</a>中你可以找到很多这种API来进行这些测试。比如，<a href="https://market.mashape.com/community/urban-dictionary" target="_blank" rel="external">Urban Dictionary API</a>。</p>
+<p>当你登录了Mashape后，你会得到2个header，并在API调用中进行传递，而不是之前我们使用的基础身份验证:</p>
+<ul>
+<li>X-Mashape-Key:MY_API_KEY</li>
+<li>Accept: application/json</li>
+</ul>
+<p>下面的curl语句也是可以执行的：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">curl --get --include \</span><br><span class="line">'https://mashape-community-urban-dictionary.p.mashape.com/define?term=hipster' \</span><br><span class="line">-H 'X-Mashape-Key: MY_API_KEY' \</span><br><span class="line">-H 'Accept: application/json'</span><br></pre></td></tr></table></figure>
+<p>那么如果使用Alamofire该怎样处理呢？别忘记之前的报头章节，那里有我们需要的所有细节。这些报头在整个会话中都需要，那么我们将来实现它。</p>
+<p>一般，如果一个API key需要在所有会话调用中使用，那么我们将为整个会话进行一次性设置，而不是在每次请求中设置。</p>
+<p>但，到目前为止，我们都是使用<code>Alamofire.request(...)</code>进行请求。而Alamofire使用一个单一的管理器来处理这些请求，也就是说如果我们像下面这样调用的话是和之前的调用是一样的：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> manager = <span class="type">Alamofire</span>.<span class="type">Manager</span>.sharedInstance</span><br><span class="line">manager.request(...)</span><br></pre></td></tr></table></figure>
+<p>这样我们就可以为整个会话设置HTTP报头了，就像我们之前设置GitHub的<code>Accept</code>报头一样。</p>
+<p>那下面我们先创建一个管理器，用来和Mashape一起进行工作：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MashapeAPIManager</span> </span>&#123;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">let</span> sharedInstance = <span class="type">MashapeAPIManager</span>()</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">var</span> alamofireManager:<span class="type">Alamofire</span>.<span class="type">Manager</span> </span><br><span class="line">  </span><br><span class="line">  <span class="keyword">init</span> () &#123;</span><br><span class="line">    <span class="keyword">let</span> configuration = <span class="type">NSURLSessionConfiguration</span>.defaultSessionConfiguration()</span><br><span class="line">  </span><br><span class="line">    configuration.<span class="type">HTTPAdditionalHeaders</span> = <span class="type">Manager</span>.defaultHTTPHeaders</span><br><span class="line">  </span><br><span class="line">    alamofireManager = <span class="type">Alamofire</span>.<span class="type">Manager</span>(configuration: configuration)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>添加报头：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">init</span> () &#123;</span><br><span class="line">  <span class="keyword">let</span> configuration = <span class="type">NSURLSessionConfiguration</span>.defaultSessionConfiguration()</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">var</span> headers = <span class="type">Manager</span>.defaultHTTPHeaders </span><br><span class="line">  headers[<span class="string">"X-Mashape-Key"</span>] = <span class="string">"MY_API_KEY"</span> </span><br><span class="line">  headers[<span class="string">"Accept"</span>] = <span class="string">"application/json"</span> </span><br><span class="line">  configuration.<span class="type">HTTPAdditionalHeaders</span> = headers</span><br><span class="line">  </span><br><span class="line">  alamofireManager = <span class="type">Alamofire</span>.<span class="type">Manager</span>(configuration: configuration)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后，使用：<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> manager = <span class="type">MashapeAPIManager</span>.sharedInstance.alamofireManager </span><br><span class="line">manager.request(.<span class="type">GET</span>,</span><br><span class="line"><span class="string">"https://mashape-community-urban-dictionary.p.mashape.com/define?term=hipster"</span>)</span><br></pre></td></tr></table></figure></p>
+<p>代替之前的：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Alamofire</span>.request(.<span class="type">GET</span>,</span><br><span class="line"><span class="string">"https://mashape-community-urban-dictionary.p.mashape.com/define?term=hipster"</span>)</span><br></pre></td></tr></table></figure>
+<p>这样<code>X-MASHAPE-KEY:MY_API_KEY</code>将这整个会话期间的每次请求中都会被传递。</p>
+<blockquote>
+<p>如果你的API是使用基础的token/header认证，那么在API管理器中为整个会话进行设置。</p>
+<p>如果你现在正在寻找一些API来提高呢的开发技能，可以使用我们的<a href="https://www.mashape.com/explore?page=1&#038;price=free" target="_blank" rel="external">Mashape</a>。这个上面有大把的API，够你折腾的了。</p>
+</blockquote>
+<h2 id="Alamofire验证-Validation"><a href="#Alamofire验证-Validation" class="headerlink" title="Alamofire验证(Validation)"></a>Alamofire验证(Validation)</h2><p>Alamofire中有一个<code>.validate()</code>的方法，可以在你的请求中这么来使用：<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">alamofireManager.request(<span class="type">GistRouter</span>.<span class="type">GetMyStarred</span>())</span><br><span class="line">  .validate()</span><br><span class="line">  .responseString &#123; response <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">guard</span> response.result.error == <span class="literal">nil</span> <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="built_in">print</span>(response.result.error!)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> receivedString = response.result.value &#123;</span><br><span class="line">      <span class="built_in">print</span>(receivedString)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>假如你没有在调用中包含对<code>.validate</code>的调用，那么Alamofire将假设调用已成功。在调用返回的类型不是我们所期望的，或返回的状态不在200~299之内时<code>.validate()</code>将返回一个调用失败。旧版本的<code>validate</code>在有错误的时候不会在调用你的自定义序列化方法，并隐藏了一些有价值的错误信息描述。但<code>v3.0.0</code>之后则不会。</p>
+<p>下面让我们看看如何在调用GitHub API失败的时候得到更有用的错误信息。</p>
+<p><code>print(response.result.error!)</code>会打印：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Error Domain=com.alamofire.error Code=-1</span><br><span class="line">  "The operation couldn't be completed. (com.alamofire.error error -1.)"</span><br></pre></td></tr></table></figure>
+<p>而<code>print(receivedString)</code>将会打印更多有关错误的信息:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  "message":"Bad credentials",</span><br><span class="line">  "documentation_url":"https://developer.github.com/v3"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因此，在<code>.validate()</code>返回之前最好对JSON进行错误检查：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">alamofireManager.request(<span class="type">GistRouter</span>.<span class="type">GetMyStarred</span>()) </span><br><span class="line">  .validate()</span><br><span class="line">  .responseString &#123; response <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> receivedString = response.result.value &#123; </span><br><span class="line">      <span class="built_in">print</span>(receivedString)</span><br><span class="line">      <span class="keyword">let</span> json = <span class="type">SwiftyJSON</span>.<span class="type">JSON</span>(receivedString) </span><br><span class="line">      <span class="comment">// Check for error in JSON</span></span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">let</span> message = json[<span class="string">"message"</span>].string &#123;</span><br><span class="line">        <span class="keyword">let</span> error = <span class="type">Error</span>.errorWithCode(.<span class="type">DataSerializationFailed</span>, failureReason: message) </span><br><span class="line">        <span class="comment">// <span class="doctag">TODO:</span> bubble up error</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// Do other stuff with JSON</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> error = response.result.error <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="built_in">print</span>(error)</span><br><span class="line">      <span class="comment">// <span class="doctag">TODO:</span> bubble up error</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在，使用<code>.validate()</code>将不在隐藏在JSON响应中的错误。</p>
+<blockquote>
+<p>对于一些API或许希望使用JSON来返回比<code>.validate()</code>更详细的错误信息。测试你的API，通过JSON和<code>.validate()</code>打印出错误信息，看看是否应该使用<code>guard</code>语句从返回的错误信息中进行序列化，或者对返回的JSON进行解析并返回。你或许会发现之前返回的”The operation couldn’t be completed”错误信息，被”unauthorized”(如：<a href="http://parse.com" target="_blank" rel="external">Parse REST API</a>)替代了。这样我们就能够得到一个描述更具体的错误信息，而不是一个通用的网络错误信息。</p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ios/" rel="tag">#ios</a>
+          
+            <a href="/tags/swift/" rel="tag">#swift</a>
+          
+            <a href="/tags/REST/" rel="tag">#REST</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/07/02/appWithRest-7/" rel="next" title="iOS Apps with REST APIs(七)">
+                <i class="fa fa-chevron-left"></i> iOS Apps with REST APIs(七)
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/08/02/appWithRest-10/" rel="prev" title="iOS Apps with REST APIs(十) -- 基于OAuth2.0认证(下)">
+                iOS Apps with REST APIs(十) -- 基于OAuth2.0认证(下) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/08/02/appWithRest-8/"
+     data-title="iOS Apps with REST APIs(八) -- 基于OAuth2.0认证(上)"
+     data-content=""
+     data-url="http://cd826.github.io/2016/08/02/appWithRest-8/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/08/02/appWithRest-8/"
+           data-title="iOS Apps with REST APIs(八) -- 基于OAuth2.0认证(上)" data-url="http://cd826.github.io/2016/08/02/appWithRest-8/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpg"
+               alt="cd826Dong" />
+          <p class="site-author-name" itemprop="name">cd826Dong</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">15</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#GitHub-API文档"><span class="nav-number">1.</span> <span class="nav-text">GitHub API文档</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基础认证-用户名-密码"><span class="nav-number">2.</span> <span class="nav-text">基础认证: 用户名/密码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP-Header-信息认证"><span class="nav-number">3.</span> <span class="nav-text">HTTP Header 信息认证</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Alamofire验证-Validation"><span class="nav-number">4.</span> <span class="nav-text">Alamofire验证(Validation)</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">cd826Dong</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"cd826"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

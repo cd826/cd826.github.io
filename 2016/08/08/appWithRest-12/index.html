@@ -1,0 +1,844 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="ios,swift,REST," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="重要说明: 这是一个系列教程，非本人原创，而是翻译国外的一个教程。本人也在学习Swift，看到这个教程对开发一个实际的APP非常有帮助，所以翻译共享给大家。原教程非常长，我会陆续翻译并发布，欢迎交流与分享。
+
+到目前为止我们的Swift应用具有的功能有：
+
+使用Alamofire框架通过GitHub Gists API获取数据
+使用自定义响应序列化将JSON数据解析为Gist对象数组
+将结果显示">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS Apps with REST APIs(十二) -- 视图控制器切换及数组、日期格式的JSON解析">
+<meta property="og:url" content="http://cd826.github.io/2016/08/08/appWithRest-12/index.html">
+<meta property="og:site_name" content="CD826Workshop">
+<meta property="og:description" content="重要说明: 这是一个系列教程，非本人原创，而是翻译国外的一个教程。本人也在学习Swift，看到这个教程对开发一个实际的APP非常有帮助，所以翻译共享给大家。原教程非常长，我会陆续翻译并发布，欢迎交流与分享。
+
+到目前为止我们的Swift应用具有的功能有：
+
+使用Alamofire框架通过GitHub Gists API获取数据
+使用自定义响应序列化将JSON数据解析为Gist对象数组
+将结果显示">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_480.png?imageView2/0/w/600">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_490.png?imageView2/0/w/400">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_500.png?imageView2/0/w/800">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_510.png?imageView2/0/w/600">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_520.png?imageView2/0/w/600">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_530.png?imageView2/0/w/600">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_540.png?imageView2/0/w/400">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_550.png?imageView2/0/w/600">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_560.png?imageView2/0/w/600">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_570.png?imageView2/0/w/600">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_580.png?imageView2/0/w/400">
+<meta property="og:updated_time" content="2016-08-08T14:15:21.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS Apps with REST APIs(十二) -- 视图控制器切换及数组、日期格式的JSON解析">
+<meta name="twitter:description" content="重要说明: 这是一个系列教程，非本人原创，而是翻译国外的一个教程。本人也在学习Swift，看到这个教程对开发一个实际的APP非常有帮助，所以翻译共享给大家。原教程非常长，我会陆续翻译并发布，欢迎交流与分享。
+
+到目前为止我们的Swift应用具有的功能有：
+
+使用Alamofire框架通过GitHub Gists API获取数据
+使用自定义响应序列化将JSON数据解析为Gist对象数组
+将结果显示">
+<meta name="twitter:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_480.png?imageView2/0/w/600">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> iOS Apps with REST APIs(十二) -- 视图控制器切换及数组、日期格式的JSON解析 | CD826Workshop </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?317a9862593d085ce8f8aa660d633b05";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">CD826Workshop</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Talk is cheap, show me the code.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                iOS Apps with REST APIs(十二) -- 视图控制器切换及数组、日期格式的JSON解析
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-08T22:00:00+08:00" content="2016-08-08">
+              2016-08-08
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/swift/" itemprop="url" rel="index">
+                    <span itemprop="name">swift</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/swift/REST/" itemprop="url" rel="index">
+                    <span itemprop="name">REST</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/08/appWithRest-12/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/08/appWithRest-12/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>重要说明: 这是一个系列教程，非本人原创，而是翻译国外的一个教程。本人也在学习Swift，看到这个教程对开发一个实际的APP非常有帮助，所以翻译共享给大家。原教程非常长，我会陆续翻译并发布，欢迎交流与分享。</p>
+</blockquote>
+<p>到目前为止我们的Swift应用具有的功能有：</p>
+<ul>
+<li>使用<a href="https://github.com/Alamofire/Alamofire" target="_blank" rel="external">Alamofire</a>框架通过<a href="https://developer.github.com/v3/gists/" target="_blank" rel="external">GitHub Gists API</a>获取数据</li>
+<li>使用自定义响应序列化将JSON数据解析为Gist对象数组</li>
+<li>将结果显示在表格视图中，并通过URL加载图片</li>
+<li>可以让用户选择3种不同的列表</li>
+<li>滚动加载更多</li>
+<li>下拉刷新</li>
+</ul>
+<p>在本章中我们将添加更多“实际”可用的功能，这些功能包含：</p>
+<ul>
+<li>从JSON中解析对象数组(这里需要解析的是文件列表)以及日期解析(使用<code>NSDateFormatter</code>)</li>
+<li>表格视图与详情视图之间的数据传递，当用户在列表中点击一行时将在详情视图中打开该Gist，并显示更详细的数据</li>
+<li>使用代码创建一个新的视图控制器，用来显示Gist中的文件内容。当用户点击文件名称时将在一个web视图中显示该文件的内容</li>
+</ul>
+<p>后面两个功能使用了不同的方式进行视图控制器的切换。到详细视图的转换使用了segue，到文件内容视图的转换则使用了导航控制器将一个新的视图控制器压入栈中。</p>
+<h2 id="JSON解析：数组和日期"><a href="#JSON解析：数组和日期" class="headerlink" title="JSON解析：数组和日期"></a>JSON解析：数组和日期</h2><p>当我们的APP启动时，就会通过API调用获取一个JSON格式的Gist列表，然后通过我们自定义的响应序列化将JSON数据转换成<code>Gist</code>对象。到目前为止，我们仅仅解析了JSON数据中的字符串，接下来我们将解析JSON数据中的文件数组及Gist的创建日期和最后更新日期。</p>
+<p>首先在<code>Gist</code>类中增加几个属性：</p>
+<a id="more"></a>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Gist</span>: <span class="title">ResponseJSONObjectSerializable</span> </span>&#123; </span><br><span class="line">  <span class="keyword">var</span> id: <span class="type">String</span>?</span><br><span class="line">  <span class="keyword">var</span> description: <span class="type">String</span>?</span><br><span class="line">  <span class="keyword">var</span> ownerLogin: <span class="type">String</span>?</span><br><span class="line">  <span class="keyword">var</span> ownerAvatarURL: <span class="type">String</span>? </span><br><span class="line">  <span class="keyword">var</span> url: <span class="type">String</span>?</span><br><span class="line">  <span class="keyword">var</span> files:[<span class="type">File</span>]?</span><br><span class="line">  <span class="keyword">var</span> createdAt:<span class="type">NSDate</span>?</span><br><span class="line">  <span class="keyword">var</span> updatedAt:<span class="type">NSDate</span>?</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们还需要一个来负责Gist中的文件信息(一个Gist可能包含多个文件)的类。对于Gist中的文件我们只需要文件名称以及文件具体内容的URL，然后我们可以在web视图中显示具体的文件内容。下面让我们创建一个<code>File.swift</code>文件，并实现<code>File</code>类：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> SwiftyJSON</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">File</span>: <span class="title">ResponseJSONObjectSerializable</span> </span>&#123; </span><br><span class="line">  <span class="keyword">var</span> filename: <span class="type">String</span>?</span><br><span class="line">  <span class="keyword">var</span> raw_url: <span class="type">String</span>?</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>和<code>Gist</code>一样，<code>File</code>类需要实现一个从JSON数据创建对象的方法，因此需要实现<code>ResponseJSONObjectSerializable</code>协议:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">File</span>: <span class="title">ResponseJSONObjectSerializable</span> </span>&#123; </span><br><span class="line">  <span class="keyword">var</span> filename: <span class="type">String</span>?</span><br><span class="line">  <span class="keyword">var</span> raw_url: <span class="type">String</span>?</span><br><span class="line"></span><br><span class="line">  <span class="keyword">required</span> <span class="keyword">init</span>?(json: <span class="type">JSON</span>) &#123; </span><br><span class="line">    <span class="keyword">self</span>.filename = json[<span class="string">"filename"</span>].string </span><br><span class="line">    <span class="keyword">self</span>.raw_url = json[<span class="string">"raw_url"</span>].string</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后扩展<code>Gists</code>的初始化方法对文件进行解析(我们后面再对日期进行处理)：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">required</span> <span class="keyword">init</span>?(json: <span class="type">JSON</span>) &#123;</span><br><span class="line">  <span class="keyword">self</span>.description = json[<span class="string">"description"</span>].string</span><br><span class="line">  <span class="keyword">self</span>.id = json[<span class="string">"id"</span>].string</span><br><span class="line">  <span class="keyword">self</span>.ownerLogin = json[<span class="string">"owner"</span>][<span class="string">"login"</span>].string </span><br><span class="line">  <span class="keyword">self</span>.ownerAvatarURL = json[<span class="string">"owner"</span>][<span class="string">"avatar_url"</span>].string </span><br><span class="line">  <span class="keyword">self</span>.url = json[<span class="string">"url"</span>].string</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// files</span></span><br><span class="line">  <span class="keyword">self</span>.files = [<span class="type">File</span>]()</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> filesJSON = json[<span class="string">"files"</span>].dictionary &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="number">_</span>, fileJSON) <span class="keyword">in</span> filesJSON &#123;</span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">let</span> newFile = <span class="type">File</span>(json: fileJSON) &#123;</span><br><span class="line">        <span class="keyword">self</span>.files?.append(newFile) </span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// <span class="doctag">TODO:</span> dates</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对于Gist中的文件，我们创建一个数组:<code>self.files = [File]()</code></p>
+<p>在JSON数据中文件列表格式为：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"files"</span>: &#123;</span><br><span class="line">  <span class="string">"ring.erl"</span>: &#123;</span><br><span class="line">    <span class="string">"size"</span>: <span class="number">932</span>,</span><br><span class="line">    <span class="string">"raw_url"</span>: <span class="string">"https://gist.githubusercontent.com/raw/365370/8c4d2d43d178df44f4c03a7f2ac0\ff512853564e/ring.erl"</span>,</span><br><span class="line">    <span class="string">"type"</span>: <span class="string">"text/plain"</span>, </span><br><span class="line">    <span class="string">"language"</span>: <span class="string">"Erlang"</span>, </span><br><span class="line">    <span class="string">"truncated"</span>: <span class="literal">false</span>, </span><br><span class="line">    <span class="string">"content"</span>: <span class="string">"content of gist"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们将循环每一个文件解析出<code>filename</code>和<code>raw_url</code>(译者注：这里给出的JSON格式中并没有<code>filename</code>属性，GitHub的API文档中也没有，但实际返回的数据中是有<code>filename</code>属性的)：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> filesJSON = json[<span class="string">"files"</span>].dictionary &#123; </span><br><span class="line">  <span class="keyword">for</span> (<span class="number">_</span>, fileJSON) <span class="keyword">in</span> filesJSON &#123;</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> newFile = <span class="type">File</span>(json: fileJSON) &#123; </span><br><span class="line">      <span class="keyword">self</span>.files?.append(newFile)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因为<code>filesJSON</code>是一个字典类型(dictionary)，所以我们可以使用<code>for(_, fileJSON) in filesJSON</code>循环每一个文件。这里<code>_</code>是一个字典<code>key</code>的占位符，表示我们不会使用该值。然后，我们将尝试使用JSON数据创建一个<code>File</code>对象，如果创建成功，将它添加到文件数组中:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> newFile = <span class="type">File</span>(json: fileJSON) &#123; </span><br><span class="line">  <span class="keyword">self</span>.files?.append(newFile)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上就是我们从JSON中解析文件数组的代码。</p>
+<h2 id="日期解析"><a href="#日期解析" class="headerlink" title="日期解析"></a>日期解析</h2><p>对于日期改如何进行解析呢？因为我们从服务器中获得的日期是字符串格式的，我们希望能够把它转换为<code>NSDate</code>对象，这里我们会使用到<code>NSDateFormatter</code>。<code>NSDateFormatter</code>可以将字符串转换为<code>NSDate</code>，也可以将<code>NSDate</code>转换为字符串。</p>
+<p>服务器返回的日期格式为：<code>2014-12-10T16:44:31.486000Z</code>。为了可以解析该字符串我们需要设置一些参数：<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">func</span> <span class="title">dateFormatter</span>() -&gt; <span class="title">NSDateFormatter</span> </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> aDateFormatter = <span class="type">NSDateFormatter</span>()</span><br><span class="line">  aDateFormatter.dateFormat = <span class="string">"yyyy-MM-dd'T'HH:mm:ssZ"</span></span><br><span class="line">  aDateFormatter.timeZone = <span class="type">NSTimeZone</span>(abbreviation: <span class="string">"UTC"</span>)</span><br><span class="line">  aDateFormatter.locale = <span class="type">NSLocale</span>(localeIdentifier: <span class="string">"en_US_POSIX"</span>)</span><br><span class="line">  <span class="keyword">return</span> aDateFormatter</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>当使用<code>NSDateFormatters</code>对服务器返回的时间进行格式化时，<code>locale</code>和<code>timeZone</code>是非常有用的，因为我们的用户可能使用不是同一种语言，位于不同的时区，使用不同的日期格式。但当将时间显示给用户看时，应该使用<code>NSDateFormatterShortStyle</code>这样用户将看到更符合他们习惯日期格式。</p>
+<p>现在我们就可以使用日期格式化对创建时间和更新时间进行解析：<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Gist</span> </span>&#123; </span><br><span class="line">  ...</span><br><span class="line"></span><br><span class="line">  <span class="keyword">required</span> <span class="keyword">init</span>?(json: <span class="type">JSON</span>) &#123; </span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Dates</span></span><br><span class="line">    <span class="keyword">let</span> dateFormatter = <span class="type">Gist</span>.dateFormatter()</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> dateString = json[<span class="string">"created_at"</span>].string &#123;</span><br><span class="line">      <span class="keyword">self</span>.createdAt = dateFormatter.dateFromString(dateString) </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> dateString = json[<span class="string">"updated_at"</span>].string &#123; </span><br><span class="line">      <span class="keyword">self</span>.updatedAt = dateFormatter.dateFromString(dateString)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>创建一个<code>NSDateFormatter</code>及改变它的属性代价都是非常高昂的。这段代码中每次进行Gist解析时都会创建一个新的<code>NSDateFormatter</code>，因此这里我将对它进行优化，让所有的解析都使用一个<code>NSDateFormatter</code>实例。代码如下：<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">let</span> sharedDateFormatter = <span class="type">Gist</span>.dateFormatter() </span><br><span class="line"><span class="keyword">required</span> <span class="keyword">init</span>?(json: <span class="type">JSON</span>) &#123;</span><br><span class="line">  ...</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">let</span> dateFormatter = <span class="type">Gist</span>.sharedDateFormatter </span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> dateString = json[<span class="string">"created_at"</span>].string &#123;</span><br><span class="line">    <span class="keyword">self</span>.createdAt = dateFormatter.dateFromString(dateString) </span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> dateString = json[<span class="string">"updated_at"</span>].string &#123; </span><br><span class="line">    <span class="keyword">self</span>.updatedAt = dateFormatter.dateFromString(dateString)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>现在我们运行，它看起来也没有什么不同。不用担心，获取并显示数据并没有多少困难。下面让我们来完善一开始创建项目时就创建的详细视图控制器。处理的流程大致如下，当我们在列表视图中点击了一个Gist时，将转换到详细视图并显示该Gist的详细信息。</p>
+<blockquote>
+<p>回头检查一下业务对象的JSON数据。并从中间选取几个属性用来在详细视图中显示，这些属性可能是日期或者一些数组。将它们添加到实体类中并解析。</p>
+<h2 id="配置详细视图控制器"><a href="#配置详细视图控制器" class="headerlink" title="配置详细视图控制器"></a>配置详细视图控制器</h2><p>打开<code>DetailViewController</code>文件，它看起来如下：<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> UIKit</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DetailViewController</span>: <span class="title">UIViewController</span> </span>&#123;</span><br><span class="line">  </span><br><span class="line">  <span class="meta">@IBOutlet</span> <span class="keyword">weak</span> <span class="keyword">var</span> detailDescriptionLabel: <span class="type">UILabel</span>!</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">var</span> detailItem: <span class="type">AnyObject</span>? &#123; </span><br><span class="line">    <span class="keyword">didSet</span> &#123;</span><br><span class="line">      <span class="comment">// Update the view.</span></span><br><span class="line">      <span class="keyword">self</span>.configureView() </span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">func</span> <span class="title">configureView</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="comment">// Update the user interface for the detail item. </span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> detail = <span class="keyword">self</span>.detailItem &#123;</span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">let</span> label = <span class="keyword">self</span>.detailDescriptionLabel &#123; </span><br><span class="line">        label.text = detail.description</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">viewDidLoad</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">super</span>.viewDidLoad()</span><br><span class="line">    <span class="comment">// Do any additional setup after loading the view, typically from a nib. </span></span><br><span class="line">    <span class="keyword">self</span>.configureView()</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">didReceiveMemoryWarning</span><span class="params">()</span></span> &#123; </span><br><span class="line">    <span class="keyword">super</span>.didReceiveMemoryWarning()</span><br><span class="line">    <span class="comment">// Dispose of any resources that can be recreated.</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<p>在故事板中详细页面视图也是非常简单的，它紧紧显示了一个标签，该视图我们将用来显示详细信息。</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_480.png?imageView2/0/w/600" style="width:600px"><br></div>
+
+<p>我们接下来将完善该UI，但是首先我们先将详细对象的类型由通用的对象<code>AnyObject</code>更改为我们所要显示的<code>Gist</code>。同时我们还需要将修改变量的名称，修改后的代码如下：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> gist: <span class="type">Gist</span>? &#123; </span><br><span class="line">  <span class="keyword">didSet</span> &#123;</span><br><span class="line">    <span class="comment">// Update the view.</span></span><br><span class="line">    <span class="keyword">self</span>.configureView()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">configureView</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="comment">// Update the user interface for the detail item. </span></span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> currentGist = <span class="keyword">self</span>.gist &#123;</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> label = <span class="keyword">self</span>.detailDescriptionLabel &#123; </span><br><span class="line">      label.text = currentGist.description</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那，该视图是从哪里获取Gist的呢？我们必须找出来，并对这些变量进行改名。这里有两种方式可以达到我们的目的：</p>
+<ol>
+<li>在整个项目中查找”detailItem”</li>
+<li>尝试编译项目，那么在使用<code>detailItem</code>的地方编译器就会报错</li>
+</ol>
+<blockquote>
+<p>我们不应该逐个去找<code>detailItem</code>。在<code>Objective-C</code>中我们可以通过重构工具直接对变量进行重命名。但swift中还没有提供该方法。希望该工具可以早点实现。</p>
+</blockquote>
+<p>通过上面的方法，我们在详细视图控制器之外找到了2处使用的地方。下面我们需要使用<code>gist</code>替换这两个地方。</p>
+<p>在<code>AppDelegate</code>中：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">splitViewController</span><span class="params">(splitViewController: UISplitViewController, </span><br><span class="line">  collapseSecondaryViewController secondaryViewController:UIViewController,  </span><br><span class="line">  ontoPrimaryViewController primaryViewController:UIViewController)</span></span> -&gt; <span class="type">Bool</span> &#123;</span><br><span class="line">    <span class="keyword">guard</span> <span class="keyword">let</span> secondaryAsNavController = secondaryViewController <span class="keyword">as</span>? </span><br><span class="line">      <span class="type">UINavigationController</span> <span class="keyword">else</span> &#123; <span class="keyword">return</span> <span class="literal">false</span> &#125;</span><br><span class="line">    <span class="keyword">guard</span> <span class="keyword">let</span> topAsDetailController = secondaryAsNavController.topViewController </span><br><span class="line">      <span class="keyword">as</span>? <span class="type">DetailViewController</span> <span class="keyword">else</span> &#123; <span class="keyword">return</span> <span class="literal">false</span> &#125;</span><br><span class="line">    <span class="keyword">if</span> topAsDetailController.gist == <span class="literal">nil</span> &#123;</span><br><span class="line">      <span class="comment">// Return true to indicate that we have handled the collapse by doing nothing </span></span><br><span class="line">      <span class="comment">// the secondary controller will be discarded.</span></span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>另外一个是在<code>MasterViewController</code>中，表格视图将选中的gist传递给<code>DetailViewController</code>进行显示。这里我们还要将类型由<code>NSData</code>修改为<code>Gist</code>就像我们修改名称一样。我们还要检查导航控制器中的顶层视图控制器是否是<code>DetailViewController</code>，而不是假定它是，以防万一我们曾经改变了导航：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">prepareForSegue</span><span class="params">(segue: UIStoryboardSegue, sender: AnyObject?)</span></span> &#123; </span><br><span class="line">  <span class="keyword">if</span> segue.identifier == <span class="string">"showDetail"</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> indexPath = <span class="keyword">self</span>.tableView.indexPathForSelectedRow &#123;</span><br><span class="line">      <span class="keyword">let</span> gist = gists[indexPath.row] <span class="keyword">as</span> <span class="type">Gist</span></span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">let</span> detailViewController = (segue.destinationViewController <span class="keyword">as</span>!</span><br><span class="line">        <span class="type">UINavigationController</span>).topViewController <span class="keyword">as</span>? </span><br><span class="line">        <span class="type">DetailViewController</span> &#123;</span><br><span class="line">        detailViewController.gist = gist </span><br><span class="line">        detailViewController.navigationItem.leftBarButtonItem =</span><br><span class="line">          <span class="keyword">self</span>.splitViewController?.displayModeButtonItem() </span><br><span class="line">        detailViewController.navigationItem.leftItemsSupplementBackButton = <span class="literal">true</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>更改你的<code>DetailViewController</code>中的实体对象模型的类，并修改其它地方对它的引用。</p>
+</blockquote>
+<p>现在我们可以编译并运行了。当我们在列表视图中点击了一个Gist后，详细视图中将会显示它的描述：</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_490.png?imageView2/0/w/400" style="width:375px"><br></div>
+
+<h2 id="在Segue中传递数据"><a href="#在Segue中传递数据" class="headerlink" title="在Segue中传递数据"></a>在Segue中传递数据</h2><p>但这是怎么工作的呢？在故事板中我们可以看到在<code>MasterViewController</code>的表格视图的单元格中有一个到<code>DetailViewController</code>的连接(实际上是导航控制器持有<code>DetailViewController</code>，但那只是让我们又一个更好的标题栏而已)：</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_500.png?imageView2/0/w/800" style="width:800px"><br></div>
+
+<blockquote>
+<p>可以使用<code>Editor-Canvas-&gt;Zoom</code>进行放大。Segue就在那里。</p>
+</blockquote>
+<p>因此，当在表格视图中点击时Segue就会被激活。当从表格视图转换(也就是”segue”)到详细视图时就会调用<code>prepareForSeque</code>方法。</p>
+<p>在<code>prepareForSegue</code>中：</p>
+<ul>
+<li>获取我们将要转换到的视图控制器: <code>let controller = (segue.destinationViewController as! UINavigationController).topViewController as! DetailViewController</code></li>
+<li>通过<code>indexPathForSelectedRow()</code>获取所点击的行。当我们表格视图中有多个区段时，<code>indexPath</code>可以获取到选中的行及区段信息</li>
+<li>获取选中的Gist: <code>let object = gists[indexPath.row]</code></li>
+<li>将它传递给目标视图控制器: <code>controller.gist = object</code></li>
+</ul>
+<p>这就是Xcode为我们构建的<code>Master-Detail</code>项目。我使用我们所创建的<code>Gist</code>来更新：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MARK: - Segues</span></span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">prepareForSegue</span><span class="params">(segue: UIStoryboardSegue, sender: AnyObject?)</span></span> &#123; </span><br><span class="line">  <span class="keyword">if</span> segue.identifier == <span class="string">"showDetail"</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> indexPath = <span class="keyword">self</span>.tableView.indexPathForSelectedRow &#123;</span><br><span class="line">      <span class="keyword">let</span> gist = gists[indexPath.row] <span class="keyword">as</span> <span class="type">Gist</span></span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">let</span> detailViewController = (segue.destinationViewController <span class="keyword">as</span>!</span><br><span class="line">        <span class="type">UINavigationController</span>).topViewController <span class="keyword">as</span>? <span class="type">DetailViewController</span> &#123;</span><br><span class="line">        detailViewController.detailItem = gist </span><br><span class="line">        detailViewController.navigationItem.leftBarButtonItem =</span><br><span class="line">          <span class="keyword">self</span>.splitViewController?.displayModeButtonItem() </span><br><span class="line">        detailViewController.navigationItem.leftItemsSupplementBackButton = <span class="literal">true</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="添加一个表视图"><a href="#添加一个表视图" class="headerlink" title="添加一个表视图"></a>添加一个表视图</h2><p>接下来让我们通过使用表视图显示数据来完善视图显示。首先，我们让<code>DetailViewController</code>实现<code>UITableViewDataSource</code>和<code>UITableViewDeletate</code>。这里我们是可以这么做的，即使<code>DetailViewController</code>不是一个<code>UITableViewController</code>。当表视图只是视图的一部分时这种方式就非常有用，比如你希望在表视图上面有一个头，它并不随着表视图的滚动而滚动。另外，我们还需要增加一个对表视图的引用，并删除原来那个标签控件：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DetailViewController</span>: <span class="title">UIViewController</span>, <span class="title">UITableViewDataSource</span>, <span class="title">UITableViewDelegate</span> </span>&#123; </span><br><span class="line">  <span class="meta">@IBOutlet</span> <span class="keyword">weak</span> <span class="keyword">var</span> tableView: <span class="type">UITableView</span>!</span><br><span class="line">  ...</span><br></pre></td></tr></table></figure>
+<p>下面让我们转到主故事板，这样我们就可以添加表视图了。打开<code>Main.Storyboard</code>并选择<code>DetailViewController</code>：</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_510.png?imageView2/0/w/600" style="width:600px"><br></div>
+
+<p>在详细视图控制器中，先删除标签，然后将表视图拖拽到控制器中，并让它充满整个视图：</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_520.png?imageView2/0/w/600" style="width:600px"><br></div>
+
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_530.png?imageView2/0/w/600" style="width:600px"><br></div>
+
+<p>然后向表视图中添加一个原型单元格。然后把<code>identifier</code>设置为”Cell”。</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_540.png?imageView2/0/w/400" style="width:320px"><br></div>
+
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_550.png?imageView2/0/w/600" style="width:600px"><br></div>
+
+<p>在右上方的面版中选择<code>connection organizer</code>(最后一个页签，圆形中间有一个小箭头)。将详细视图控制器连接成为表视图的数据源(data source)和代理(delegate)。然后将详细视图中的<code>tableView</code> IBOutlet链接到表视图：</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_560.png?imageView2/0/w/600" style="width:600px"><br></div>
+
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_570.png?imageView2/0/w/600" style="width:600px"><br></div>
+
+<p>现在我们就可以转会到详细视图控制器，为表视图填充数据并显示。这里我们有2个区段：一个用来显示gist的基础数据，如描述等；另外一个用来显示gist中的文件列表。然后当点击文件时，显示它们的详细内容。</p>
+<p>因为我们有两个区段，我们还需要为它们设置相应的标题。第一个区段有两个项目需要显示（描述信息和拥有者信息），第二个区段需要显示所包含文件的列表：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">numberOfSectionsInTableView</span><span class="params">(tableView: UITableView)</span></span> -&gt; <span class="type">Int</span> &#123; </span><br><span class="line">  <span class="keyword">return</span> <span class="number">2</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView, numberOfRowsInSection section: Int)</span></span> -&gt; <span class="type">Int</span> &#123; </span><br><span class="line">  <span class="keyword">if</span> section == <span class="number">0</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">2</span> </span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> gist?.files?.<span class="built_in">count</span> ?? <span class="number">0</span> </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView, titleForHeaderInSection section: Int)</span></span> -&gt; <span class="type">String</span>? &#123; </span><br><span class="line">  <span class="keyword">if</span> section == <span class="number">0</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"About"</span> </span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"Files"</span> </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>??</code>是空和运算符。它表示，如果不为空就使用该值，否则就使用默认值。因此<code>return gist?.files?.count ?? 0</code>将返回文件的个数，如果gist中没有文件就返回0.</p>
+<p>这样我们就可以使用这些数据来填充表视图的单元格了：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath)</span></span> -&gt; <span class="type">UITableViewCell</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> cell = tableView.dequeueReusableCellWithIdentifier(<span class="string">"Cell"</span>, forIndexPath: indexPath)</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">if</span> indexPath.section == <span class="number">0</span> &#123; </span><br><span class="line">    <span class="keyword">if</span> indexPath.row == <span class="number">0</span> &#123;</span><br><span class="line">      cell.textLabel?.text = gist?.description </span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> indexPath.row == <span class="number">1</span> &#123;</span><br><span class="line">      cell.textLabel?.text = gist?.ownerLogin</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> file = gist?.files?[indexPath.row] &#123;</span><br><span class="line">      cell.textLabel?.text = file.filename</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> cell </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当gist赋值后我们还得告诉表视图重新进行加载:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">configureView</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="comment">// Update the user interface for the detail item. </span></span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> detailsView = <span class="keyword">self</span>.tableView &#123;</span><br><span class="line">    detailsView.reloadData()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在就可以编译运行了。</p>
+<blockquote>
+<p>构建你的表视图或者使用IBOutlet自定义详细视图控制器中的视图，展示你的详细信息。</p>
+</blockquote>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_580.png?imageView2/0/w/400" style="width:375px"><br></div>
+
+<p>虽然我们可以看到文件的列表了，但是它还不是很有用。下面让我们来增加一些有用功能：</p>
+<ol>
+<li>当点击文件名时显示文件的具体内容</li>
+<li>可让用户收藏/取消收藏该gist</li>
+</ol>
+<h2 id="显示文件内容"><a href="#显示文件内容" class="headerlink" title="显示文件内容"></a>显示文件内容</h2><p>我们在解析JSON数据的时候，并没有获取到文件的具体内容，而是获取到这些文件的URL路径。我们可以使用web视图来显示这个URL。当然还有更好的方式，但现在使用web视图就足够了。</p>
+<p>在处理OAuth的时候我们已经引入了<code>Safari Services framework</code>。如果你还没有做，那么你需要把它添加到工程中。</p>
+<p>在<code>DetailViewController</code>中引入<code>SafariServices</code>框架：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> UIKit</span><br><span class="line"><span class="keyword">import</span> SafariServices</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DetailViewController</span>: <span class="title">UIViewController</span>, <span class="title">UITableViewDataSource</span>, <span class="title">UITableViewDelegate</span> </span>&#123; </span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当用户点击一个文件名时：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)</span></span> &#123; </span><br><span class="line">  <span class="keyword">if</span> indexPath.section == <span class="number">1</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> file = gist?.files?[indexPath.row], </span><br><span class="line">      urlString = file.raw_url,</span><br><span class="line">      url = <span class="type">NSURL</span>(string: urlString) &#123;</span><br><span class="line">        <span class="keyword">let</span> safariViewController = <span class="type">SFSafariViewController</span>(<span class="type">URL</span>: url) </span><br><span class="line">        safariViewController.title = file.filename </span><br><span class="line">        <span class="keyword">self</span>.navigationController?.pushViewController(safariViewController, animated: <span class="literal">true</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当用户点击文件名时，我们可以获取到相应的URL:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> file = gist?.files?[indexPath.row], </span><br><span class="line">  urlString = file.raw_url,</span><br><span class="line">  url = <span class="type">NSURL</span>(string: urlString) &#123;</span><br></pre></td></tr></table></figure>
+<p>然后我们就创建一个Safari视图控制器，并把URL传递给它显示，在导航栏中显示文件名称：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> safariViewController = <span class="type">SFSafariViewController</span>(<span class="type">URL</span>: url) safariViewController.title = file.filename</span><br></pre></td></tr></table></figure>
+<p>最后使用导航控制器切换到该视图:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">self</span>.navigationController?.pushViewController(safariViewController, animated: <span class="literal">true</span>)</span><br></pre></td></tr></table></figure>
+<p>使用导航控制器就意味着在新的视图中显示一个退回按钮，并且允许使用滑动手势返回。这样我们也就不用增加新的按钮来处理这些功能了。</p>
+<blockquote>
+<p>看看你的工程中是否有那些可以使用web视图进行显示的。如果有，就按照上面的步骤实现它。</p>
+</blockquote>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>接下来我们将为gist添加收藏和取消收藏功能。</p>
+<p>本章的<a href="https://github.com/cmoulton/grokSwiftREST_v1.1/releases/tag/detail" target="_blank" rel="external">代码</a>。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ios/" rel="tag">#ios</a>
+          
+            <a href="/tags/swift/" rel="tag">#swift</a>
+          
+            <a href="/tags/REST/" rel="tag">#REST</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/08/appWithRest-11/" rel="next" title="iOS Apps with REST APIs(十一) -- 列表切换">
+                <i class="fa fa-chevron-left"></i> iOS Apps with REST APIs(十一) -- 列表切换
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/08/08/appWithRest-12/"
+     data-title="iOS Apps with REST APIs(十二) -- 视图控制器切换及数组、日期格式的JSON解析"
+     data-content=""
+     data-url="http://cd826.github.io/2016/08/08/appWithRest-12/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/08/08/appWithRest-12/"
+           data-title="iOS Apps with REST APIs(十二) -- 视图控制器切换及数组、日期格式的JSON解析" data-url="http://cd826.github.io/2016/08/08/appWithRest-12/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpg"
+               alt="cd826Dong" />
+          <p class="site-author-name" itemprop="name">cd826Dong</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">15</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JSON解析：数组和日期"><span class="nav-number">1.</span> <span class="nav-text">JSON解析：数组和日期</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#日期解析"><span class="nav-number">2.</span> <span class="nav-text">日期解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置详细视图控制器"><span class="nav-number">3.</span> <span class="nav-text">配置详细视图控制器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在Segue中传递数据"><span class="nav-number">4.</span> <span class="nav-text">在Segue中传递数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加一个表视图"><span class="nav-number">5.</span> <span class="nav-text">添加一个表视图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#显示文件内容"><span class="nav-number">6.</span> <span class="nav-text">显示文件内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">7.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">cd826Dong</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"cd826"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

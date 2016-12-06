@@ -1,0 +1,916 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="ios,swift,REST," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="重要说明: 这是一个系列教程，非本人原创，而是翻译国外的一个教程。本人也在学习Swift，看到这个教程对开发一个实际的APP非常有帮助，所以翻译共享给大家。原教程非常长，我会陆续翻译并发布，欢迎交流与分享。
+
+OAuth2.0OAuth2.0在当前是使用非常普遍的认证方式。它可以让你在不用把密码给每一个应用，也不用为每一个应用创建新的账号情况下登录。如果你对OAuth2.0还不熟悉的话，可以看看">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS Apps with REST APIs(九) -- 基于OAuth2.0认证(中)">
+<meta property="og:url" content="http://cd826.github.io/2016/08/02/appWithRest-9/index.html">
+<meta property="og:site_name" content="CD826Workshop">
+<meta property="og:description" content="重要说明: 这是一个系列教程，非本人原创，而是翻译国外的一个教程。本人也在学习Swift，看到这个教程对开发一个实际的APP非常有帮助，所以翻译共享给大家。原教程非常长，我会陆续翻译并发布，欢迎交流与分享。
+
+OAuth2.0OAuth2.0在当前是使用非常普遍的认证方式。它可以让你在不用把密码给每一个应用，也不用为每一个应用创建新的账号情况下登录。如果你对OAuth2.0还不熟悉的话，可以看看">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_210.png?imageView2/0/w/480">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_220.png?imageView2/0/w/400">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_230.png?imageView2/0/w/400">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_240.png">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_250.png?imageView2/0/w/400">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_260.png?imageView2/0/w/480">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_270.png?imageView2/0/w/480">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_280.png?imageView2/0/w/480">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_290.png?imageView2/0/w/480">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_300.png?imageView2/0/w/480">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_310.png?imageView2/0/w/480">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_320.png?imageView2/0/w/480">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_330.png?imageView2/0/w/480">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_340.png?imageView2/0/w/480">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_350.png?imageView2/0/w/480">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_360.png?imageView2/0/w/480">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_370.png?imageView2/0/w/480">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_380.png?imageView2/0/w/480">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_390.png?imageView2/0/w/480">
+<meta property="og:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_400.png?imageView2/0/w/480">
+<meta property="og:updated_time" content="2016-08-02T14:25:25.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS Apps with REST APIs(九) -- 基于OAuth2.0认证(中)">
+<meta name="twitter:description" content="重要说明: 这是一个系列教程，非本人原创，而是翻译国外的一个教程。本人也在学习Swift，看到这个教程对开发一个实际的APP非常有帮助，所以翻译共享给大家。原教程非常长，我会陆续翻译并发布，欢迎交流与分享。
+
+OAuth2.0OAuth2.0在当前是使用非常普遍的认证方式。它可以让你在不用把密码给每一个应用，也不用为每一个应用创建新的账号情况下登录。如果你对OAuth2.0还不熟悉的话，可以看看">
+<meta name="twitter:image" content="http://o6pjjbgcb.bkt.clouddn.com/rest_210.png?imageView2/0/w/480">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> iOS Apps with REST APIs(九) -- 基于OAuth2.0认证(中) | CD826Workshop </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?317a9862593d085ce8f8aa660d633b05";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">CD826Workshop</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Talk is cheap, show me the code.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                iOS Apps with REST APIs(九) -- 基于OAuth2.0认证(中)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-02T18:32:00+08:00" content="2016-08-02">
+              2016-08-02
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/swift/" itemprop="url" rel="index">
+                    <span itemprop="name">swift</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/swift/REST/" itemprop="url" rel="index">
+                    <span itemprop="name">REST</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/02/appWithRest-9/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/02/appWithRest-9/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>重要说明: 这是一个系列教程，非本人原创，而是翻译国外的一个教程。本人也在学习Swift，看到这个教程对开发一个实际的APP非常有帮助，所以翻译共享给大家。原教程非常长，我会陆续翻译并发布，欢迎交流与分享。</p>
+</blockquote>
+<h2 id="OAuth2-0"><a href="#OAuth2-0" class="headerlink" title="OAuth2.0"></a>OAuth2.0</h2><p>OAuth2.0在当前是使用非常普遍的认证方式。它可以让你在不用把密码给每一个应用，也不用为每一个应用创建新的账号情况下登录。如果你对OAuth2.0还不熟悉的话，可以看看这篇文档<a href="https://www.raywenderlich.com/99431/OAuth-2-with-swift-tutorial" target="_blank" rel="external">OAuth-2-with-swift-tutorial</a>。这里我们大致讲一下OAuth2.0的工作原理。<br>假如你要让一个iOS App可以访问你Twitter账户中的一些权限，那么OAuth2.0的认证流程如下：</p>
+<ol>
+<li>App将带你去Twitter进行登录</li>
+<li>你在Twitter上进行登录并授权给App(或许只授有限的权限)</li>
+<li>Twitter将带你再次回到原来的App，并返回一个令牌(Token)给App使用</li>
+</ol>
+<p>这个流程对你来说可能有些迷惑(事实上，这里还有一些其它额外步骤，后面我们会添加进来)，但这意味着iOS App永远都不会知道你的密码。而且也允许你在不修改Twitter密码的情况下取消对App的授权。</p>
+<p>所以，当你打算使用OAuth2.0进行认证的时候，第一件事就是构建一个登录流程来获取令牌。因此，下面让我们完成这件事。</p>
+<a id="more"></a>
+<p>我们通过GitHub gists API获取所收藏的Gists列表，如果在没有认证的时候，调用<code>https://api.github.com/gists/starred</code>将会得到下面的错误：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  "message":"Bad credentials",</span><br><span class="line">  "documentation_url":"https://developer.github.com/v3"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个错误告诉我们需要一个OAuth认证令牌，并和请求一起发送过来。因此，我们接下来实现这个OAuth认证流程，并获取所收藏Gists的列表，然后像前面使用基础认证的时候一样，把这个列表输出到控制台。</p>
+<p><strong>温馨提示：接下来的这个章节会非常长，或许你应该先去一下洗手间或者吃点什么。</strong></p>
+<p>没有认证时的API调用：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MARK: - OAuth 2.0</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">printMyStarredGistsWithOAuth2</span><span class="params">()</span></span> -&gt; <span class="type">Void</span> &#123; </span><br><span class="line">  alamofireManager.request(<span class="type">GistRouter</span>.<span class="type">GetMyStarred</span>())</span><br><span class="line">    .responseString &#123; response <span class="keyword">in</span></span><br><span class="line">      <span class="keyword">guard</span> response.result.error == <span class="literal">nil</span> <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(response.result.error!)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">let</span> receivedString = response.result.value &#123;</span><br><span class="line">        <span class="built_in">print</span>(receivedString)</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果你之前在你的路由器中添加了基础认证的代码，那么现在先删掉。我们很快就会把它替换为OAuth令牌。下面是没有添加任何认证的代码：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">GistRouter</span>: <span class="title">URLRequestConvertible</span> </span>&#123;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">let</span> baseURLString:<span class="type">String</span> = <span class="string">"https://api.github.com"</span></span><br><span class="line">  </span><br><span class="line">  <span class="keyword">case</span> <span class="type">GetPublic</span>() <span class="comment">// GET https://api.github.com/gists/public </span></span><br><span class="line">  <span class="keyword">case</span> <span class="type">GetMyStarred</span>() <span class="comment">// GET https://api.github.com/gists/starred </span></span><br><span class="line">  <span class="keyword">case</span> <span class="type">GetAtPath</span>(<span class="type">String</span>) <span class="comment">// GET at given path</span></span><br><span class="line">  </span><br><span class="line">  <span class="keyword">var</span> <span class="type">URLRequest</span>: <span class="type">NSMutableURLRequest</span> &#123; </span><br><span class="line">    <span class="keyword">var</span> method: <span class="type">Alamofire</span>.<span class="type">Method</span> &#123;</span><br><span class="line">      <span class="keyword">switch</span> <span class="keyword">self</span> &#123; </span><br><span class="line">      <span class="keyword">case</span> .<span class="type">GetPublic</span>:</span><br><span class="line">        <span class="keyword">return</span> .<span class="type">GET</span></span><br><span class="line">      <span class="keyword">case</span> .<span class="type">GetMyStarred</span>:</span><br><span class="line">        <span class="keyword">return</span> .<span class="type">GET</span> </span><br><span class="line">      <span class="keyword">case</span> .<span class="type">GetAtPath</span>:</span><br><span class="line">        <span class="keyword">return</span> .<span class="type">GET</span> </span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> result: (path: <span class="type">String</span>, parameters: [<span class="type">String</span>: <span class="type">AnyObject</span>]?) = &#123; </span><br><span class="line">      <span class="keyword">switch</span> <span class="keyword">self</span> &#123;</span><br><span class="line">      <span class="keyword">case</span> .<span class="type">GetPublic</span>:</span><br><span class="line">        <span class="keyword">return</span> (<span class="string">"/gists/public"</span>, <span class="literal">nil</span>) </span><br><span class="line">      <span class="keyword">case</span> .<span class="type">GetMyStarred</span>:</span><br><span class="line">        <span class="keyword">return</span> (<span class="string">"/gists/starred"</span>, <span class="literal">nil</span>) </span><br><span class="line">      <span class="keyword">case</span> .<span class="type">GetAtPath</span>(<span class="keyword">let</span> path):</span><br><span class="line">        <span class="keyword">let</span> <span class="type">URL</span> = <span class="type">NSURL</span>(string: path)</span><br><span class="line">        <span class="keyword">let</span> relativePath = <span class="type">URL</span>!.relativePath!</span><br><span class="line">        <span class="keyword">return</span> (relativePath, <span class="literal">nil</span>) </span><br><span class="line">      &#125;</span><br><span class="line">    &#125;()</span><br><span class="line">      </span><br><span class="line">    <span class="keyword">let</span> <span class="type">URL</span> = <span class="type">NSURL</span>(string: <span class="type">GistRouter</span>.baseURLString)!</span><br><span class="line">    <span class="keyword">let</span> <span class="type">URLRequest</span> = <span class="type">NSMutableURLRequest</span>(<span class="type">URL</span>: <span class="type">URL</span>.<span class="type">URLByAppendingPathComponent</span>(result.path)) </span><br><span class="line">      </span><br><span class="line">    <span class="keyword">let</span> encoding = <span class="type">Alamofire</span>.<span class="type">ParameterEncoding</span>.<span class="type">JSON</span></span><br><span class="line">    <span class="keyword">let</span> (encodedRequest, <span class="number">_</span>) = encoding.encode(<span class="type">URLRequest</span>, parameters: result.parameters)</span><br><span class="line">      </span><br><span class="line">    encodedRequest.<span class="type">HTTPMethod</span> = method.rawValue</span><br><span class="line">      </span><br><span class="line">    <span class="keyword">return</span> encodedRequest </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="1-获取OAuth访问令牌"><a href="#1-获取OAuth访问令牌" class="headerlink" title="1. 获取OAuth访问令牌"></a>1. 获取OAuth访问令牌</h3><p>在App启动的时候，如果我们没有OAuth访问令牌，那么我们需要先获取一个。所以，在调用<code>printMyStarredGistsWithOAuth2</code>之前我们先要判断是否已经有了OAuth访问令牌，如果没有要先获取一个。</p>
+<p>在<code>MasterViewController</code>中，我们增加一个方法进行初始数据的加载。如果我们已经有了一个访问令牌，它将获取这个令牌，并打印获取到的收藏Gists列表。后面我们将把<code>printMyStarredGistsWithOAuth2</code>替换为<code>loadGists</code>，但现在先让我们来确认OAuth能够正常进行工作：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">viewDidAppear</span><span class="params">(animated: Bool)</span></span> &#123; </span><br><span class="line">  <span class="keyword">super</span>.viewDidAppear(animated)</span><br><span class="line">  </span><br><span class="line">  loadInitialData()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">loadInitialData</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (!<span class="type">GitHubAPIManager</span>.sharedInstance.hasOAuthToken()) &#123;</span><br><span class="line">    showOAuthLoginView() </span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="type">GitHubAPIManager</span>.sharedInstance.printMyStarredGistsWithOAuth2()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>判断我们是否已经有了一个OAuth访问令牌是<code>GitHubAPIManager</code>的责任，因此，我们添加一个方法来判断：<code>GitHubAPIManager.sharedInstance.hasOAuthToken()</code>。</p>
+<p>如果我们还没有访问令牌，那么将发起一个OAuth认证流程。我们通过<code>showOAuthLoginView()</code>方法显示一个视图，在该视图中用户可以点击登录按钮进行登录。当用户点击登录按钮时，我们将调用<code>URLToStartOAuth2Login()</code>方法，让<code>MasterViewController</code>可以获取URL并开始登录流程。接下来我们将创建这个视图，并实现上面说的两个方法。<br>假如我们有了认证令牌，我们就可以打印Gists列表了：<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">GitHubAPIManager</span>.sharedInstance.printMyStarredGistsWithOAuth2()</span><br></pre></td></tr></table></figure></p>
+<p>我们要实现的工作如下：</p>
+<ol>
+<li>使用<code>hasOAuthToken</code>检查是否已经持有访问令牌</li>
+<li>创建一个登录视图</li>
+<li>通过<code>startOAuth2Login</code>启动一个OAuth认证流程</li>
+<li>一旦我们获取了访问令牌，发起一个包含认证信息的请求并打印我们收藏的Gists列表</li>
+</ol>
+<p>我们可以先把大致需要实现的框架写出来，后面慢慢实现，以免忘记：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Foundation</span><br><span class="line"><span class="keyword">import</span> Alamofire</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GitHubAPIManager</span> </span>&#123;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">let</span> sharedInstance = <span class="type">GitHubAPIManager</span>()</span><br><span class="line">  </span><br><span class="line">  ...</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">func</span> <span class="title">hasOAuthToken</span><span class="params">()</span></span> -&gt; <span class="type">Bool</span> &#123; </span><br><span class="line">    <span class="comment">// <span class="doctag">TODO:</span> implement</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// MARK: - OAuth flow</span></span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">func</span> <span class="title">URLToStartOAuth2Login</span><span class="params">()</span></span> -&gt; <span class="type">NSURL</span>? &#123; </span><br><span class="line">    <span class="comment">// <span class="doctag">TODO:</span> implement</span></span><br><span class="line">    <span class="comment">// <span class="doctag">TODO:</span> get and print starred gists</span></span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">func</span> <span class="title">printMyStarredGistsWithOAuth2</span><span class="params">()</span></span> -&gt; <span class="type">Void</span> &#123; </span><br><span class="line">    alamofireManager.request(<span class="type">GistRouter</span>.<span class="type">GetMyStarred</span>())</span><br><span class="line">      .responseString &#123; response <span class="keyword">in</span></span><br><span class="line">        <span class="keyword">guard</span> response.result.error == <span class="literal">nil</span> <span class="keyword">else</span> &#123; </span><br><span class="line">          <span class="built_in">print</span>(response.result.error!)</span><br><span class="line">          <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> receivedString = response.result.value &#123;</span><br><span class="line">          <span class="built_in">print</span>(receivedString)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-登录视图"><a href="#2-登录视图" class="headerlink" title="2. 登录视图"></a>2. 登录视图</h3><p>最好的方式就是让用户总是知道发生了什么。因此，我们不会直接把用户带到GitHub登录页面，而是弹出一个视图可以让用户确认他们是否愿意登录。</p>
+<p>打开故事板，并拖拽一个新的视图控制器(View Controller)到故事板中：</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_210.png?imageView2/0/w/480" style="width:480px"><br></div><br>在新的视图控制器中添加一个按钮：<br><br><div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_220.png?imageView2/0/w/400" style="width:320px"><br></div>
+
+<p>设置标题为：<code>Login to GitHub</code>:</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_230.png?imageView2/0/w/400" style="width:320px"><br></div>
+
+<p>确保按钮的宽度足够宽：</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_240.png"><br></div>
+
+<p>选中按钮并添加相对视图水平居中和垂直居中约束：</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_250.png?imageView2/0/w/400" style="width:400px"><br></div>
+
+<p>为了添加该按钮的处理函数，我们需要创建一个新的Swift类文件来处理该视图控制器。创建一个新的Swift文件并命名为：<code>LoginViewController.swift</code>。</p>
+<p>在新的登录视图控制器代码文件中，我们需要增加一个<code>IBAction</code>来响应这个按钮的处理:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> UIKit</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LoginViewController</span>: <span class="title">UIViewController</span> </span>&#123;</span><br><span class="line">  <span class="meta">@IBAction</span> <span class="function"><span class="keyword">func</span> <span class="title">tappedLoginButton</span><span class="params">()</span></span> &#123; </span><br><span class="line">    <span class="comment">// <span class="doctag">TODO:</span> implement</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后我们切换到故事板。设置故事板的ID并将视图控制器的类设置为<code>LoginViewController</code>:</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_260.png?imageView2/0/w/480" style="width:480px"><br></div>
+
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_270.png?imageView2/0/w/480" style="width:480px"><br></div>
+
+<p>并将按钮的<code>touch up inside</code>事件与我们刚刚添加的代码连接起来:</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_280.png?imageView2/0/w/480" style="width:480px"><br></div>
+
+<p>现在我们就可以在启动App时，如果检测到还没有一个OAuth令牌，就可以转到登录视图。在<code>MasterViewController</code>中修改代码如下：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">loadInitialData</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">if</span>(!<span class="type">GitHubAPIManager</span>.sharedInstance.hasOAuthToken()) &#123;</span><br><span class="line">    showOAuthLoginView()</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="type">GitHubAPIManager</span>.sharedInstance.printMyStarredGistsWithOAuth2()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">showOAuthLoginView</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">let</span> storyboard = <span class="type">UIStoryboard</span>(name: <span class="string">"Main"</span>, budle: <span class="type">NSBundle</span>.mainBundle())</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> loginVC = storyboard.instantiateViewControllerWithIdentifier(</span><br><span class="line">    <span class="string">"LoginViewController"</span>) <span class="keyword">as</span>? <span class="type">LoginViewController</span> &#123;</span><br><span class="line">    <span class="keyword">self</span>.presentViewController(loginVC, animated: <span class="literal">true</span>, completion: <span class="literal">nil</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>为了能够显示该视图，我们首先需要从故事板中创建一个实例(使用故事板的ID：<code>LoginViewController</code>)。然后我们就可以使用导航控制器，就是在之前使用<code>master-detail</code>创建的，将视图控制器压到视图栈中。</p>
+<p>这样就会交给登录视图控制器来负责。但接下来该怎么处理呢？如果用户点击了登录按钮，我们需要启动一个OAuth登录流程并把登录视图隐藏。<code>IBAction</code>在登录视图控制器中，但我么希望能够转回到主视图并启动OAuth流程。</p>
+<p>幸运的是，代理模式可以解决这种需求。我们将定义一个协议，用了定义登录视图的代理在登录按钮被按下时应该做些什么。我们可以在<code>LoginViewController</code>中来定义这个协议，协议的名称为:<code>LoginViewDelegate</code>:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> UIKit</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">protocol</span> <span class="title">LoginViewDelegate</span>: <span class="title">class</span> </span>&#123; </span><br><span class="line">  <span class="function"><span class="keyword">func</span> <span class="title">didTapLoginButton</span><span class="params">()</span></span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LoginViewController</span>: <span class="title">UIViewController</span> </span>&#123;</span><br><span class="line">  <span class="keyword">weak</span> <span class="keyword">var</span> delegate: <span class="type">LoginViewDelegate</span>?</span><br><span class="line">  </span><br><span class="line">  <span class="meta">@IBAction</span> <span class="function"><span class="keyword">func</span> <span class="title">tappedLoginButton</span><span class="params">()</span></span> &#123; </span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> delegate = <span class="keyword">self</span>.delegate &#123;</span><br><span class="line">      delegate.didTapLoginButton()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那么，当登录按钮被按下时，我们将检查是否有代理存在，如果有我们将告诉它发生了什么。</p>
+<blockquote>
+<p>这里将代理声明为一个<code>weak var</code>，这样登录视图控制器就不会拥有该委托。否则我们就创建了一个<code>retain cycle</code>，因为代理(也就是<code>MasterViewController</code>)拥有<code>LoginViewController</code>，而<code>LoginViewController</code>也拥有这个代理。在这种情况下两个视图控制器都不能够被释放，就会造成内存泄漏。</p>
+</blockquote>
+<p>我们主视图控制器需要来实现该协议，从而能干处理相应的事件:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MasterViewController</span>: <span class="title">UITableViewController</span>, <span class="title">LoginViewDelegate</span> </span>&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在显示登录视图之前，我们需要把登录视图的代理设置为自己：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">showOAuthLoginView</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">let</span> storyboard = <span class="type">UIStoryboard</span>(name: <span class="string">"Main"</span>, bundle: <span class="type">NSBundle</span>.mainBundle()) </span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> loginVC = storyboard.instantiateViewControllerWithIdentifier(</span><br><span class="line">    <span class="string">"LoginViewController"</span>) <span class="keyword">as</span>? <span class="type">LoginViewController</span> &#123;</span><br><span class="line">    loginVC.delegate = <span class="keyword">self</span></span><br><span class="line">    <span class="keyword">self</span>.presentViewController(loginVC, animated: <span class="literal">true</span>, completion: <span class="literal">nil</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后，我们需要在<code>MasterViewController</code>中实现该协议，从而能够处理登录按钮的点击事件:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">didTapLoginButton</span><span class="params">()</span></span> &#123; </span><br><span class="line">  <span class="keyword">self</span>.dismissViewControllerAnimated(<span class="literal">false</span>, completion: <span class="literal">nil</span>)</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> authURL = <span class="type">GitHubAPIManager</span>.sharedInstance.<span class="type">URLToStartOAuth2Login</span>() &#123; </span><br><span class="line">    <span class="comment">// <span class="doctag">TODO:</span> show web page</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当用户点击登录按钮时，我们将销毁登录视图，并启动OAuth流程。下面，我们将先来了解一个GitHub的OAuth处理流程，然后再回来完成该代码。  </p>
+<h3 id="3-OAuth登录流程"><a href="#3-OAuth登录流程" class="headerlink" title="3. OAuth登录流程"></a>3. OAuth登录流程</h3><p>使用GitHub的API请求一个令牌可以按照下面的流程，尽管<a href="https://developer.github.com/v3/oauth/" target="_blank" rel="external">文档</a>中说该流程是为Web应用的:</p>
+<ol>
+<li>重定向用户到GitHub的访问请求</li>
+<li>GitHub将重新返回一个编码给你的网站(这里是我们的APP)</li>
+<li>使用该编码获取一个访问令牌</li>
+<li>使用该访问令牌来访问API</li>
+</ol>
+<blockquote>
+<p>第三步，在前面开头我说过是额外的一个步骤。因为用户不会看到这个步骤，因此我们可以考虑不把该步骤作为OAuth 2.0流程的一步，但对于编码来说是必须要实现的。</p>
+</blockquote>
+<h4 id="第一步：将用户重新定位到GitHub"><a href="#第一步：将用户重新定位到GitHub" class="headerlink" title="第一步：将用户重新定位到GitHub"></a>第一步：将用户重新定位到GitHub</h4><p>首先我们要做的就是将用户重新定位到GitHub网页。我们需要定位到的端点为：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET https:<span class="comment">//github.com/login/oauth/authorize</span></span><br></pre></td></tr></table></figure>
+<p>需要的参数为：</p>
+<ul>
+<li>client_id</li>
+<li>redirect_uri</li>
+<li>scope</li>
+<li>state</li>
+</ul>
+<p>这里的参数只有<code>client_id</code>为必须参数，但是我们会提供除了<code>redirect_uri</code>参数之外的所有参数信息，因为<code>redirect_uri</code>可以在Web接口中设定。</p>
+<p>为了获取一个client ID你必须先在GitHub中建立一个应用：<a href="https://github.com/settings/applications/new" target="_blank" rel="external">Create a new OAuth app</a>。</p>
+<p><em>如果你还没有GitHub帐号，那么首先你要去注册一个免费帐号。而且，你还需要先去关注几个gists，这样后面你的API调用才能获取这些数据。</em></p>
+<p>填写登录表单。对于认证回调的URL(也就是在<code>redirect_uri</code>中指定的值)，为你的APP构建一个URL格式(URL format)，该格式以一个唯一的ID开头。如，在这里我使用<code>grokGitHub://?aParam=paramVal</code>，<code>grokGithub://</code>是一个自定义的URL协议。<code>?aParam=paramVal</code>部分对于我们的代码来熟不是必须的，但GitHub是不接受没有没有参数的回调URL。</p>
+<p>认证回调URL在第二步中当GitHub重新将用户发送回我们的APP时使用。对于第一步，我们需要从GitHub中拷贝<code>client_id</code>。我们后面也会需要<code>client_secret</code>，所以这里也一起拷贝:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GitHubAPIManager</span> </span><br><span class="line"></span>&#123;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">let</span> sharedInstance = <span class="type">GitHubAPIManager</span>() </span><br><span class="line">  <span class="keyword">var</span> alamofireManager:<span class="type">Alamofire</span>.<span class="type">Manager</span></span><br><span class="line">  </span><br><span class="line">  <span class="keyword">let</span> clientID: <span class="type">String</span> = <span class="string">"1234567890"</span></span><br><span class="line">  <span class="keyword">let</span> clientSecret: <span class="type">String</span> = <span class="string">"abcdefghijkl"</span> </span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一般我们不会将<code>client ID</code>和<code>secret</code>存放在APP代码中，这样一些不怀好意的家伙就可以从这里获取。但现在对于我们做个演示如何使用OAuth来说是可以的，而且也大大简化我们的处理。</p>
+<p>现在我们已经获取了<code>client ID</code>，接下来我们就可以实现<code>URLToStartOAuth2Login()</code>：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MARK: - OAuth flow</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">URLToStartOAuth2Login</span><span class="params">()</span></span> -&gt; <span class="type">NSURL</span>? &#123;</span><br><span class="line">  <span class="keyword">let</span> authPath:<span class="type">String</span> = <span class="string">"https://github.com/login/oauth/authorize"</span> + </span><br><span class="line">    <span class="string">"?client_id=\(clientID)&amp;scope=gist&amp;state=TEST_STATE"</span></span><br><span class="line">  <span class="keyword">guard</span> <span class="keyword">let</span> authURL:<span class="type">NSURL</span> = <span class="type">NSURL</span>(string: authPath) <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// <span class="doctag">TODO:</span> handle error</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> authURL </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在<code>didTapLoginButton()</code>中我们将调用该函数将用户带到网页进行登录。在iOS9中有一个非常好的新的类<code>SFSafariViewController</code>，我们可以用来将用户带到OAuth登录页面。</p>
+<p>为了可以使用<code>SFSafariViewController</code>我们需要在我们的工程中增加<code>Safari Services</code>框架。在<code>organizer</code>面板(左上角)中选择你的工程。然后选择<code>target</code>并在第一个页签向下滚动直到找到<code>Linked Frameworks and Libraries</code>。在该区段的下面点击添加按钮：</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_290.png?imageView2/0/w/480" style="width:480px"><br></div>
+
+<p>然后选择<code>SafariServices.framework</code>：</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_300.png?imageView2/0/w/480" style="width:480px"><br></div>
+
+<p>这样你可以看到已经添加到你的工程中了:</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_310.png?imageView2/0/w/480" style="width:480px"><br></div>
+
+<p>现在我们可以引入该框架了。我们需要将该视图控制器作为一个变量(同时将<code>MasterViewController</code>作为它的代理)。这样我们就可以为用户显示网页，处理当没有网络连接时的错误，并在用户完成时隐藏它。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> SafariServices</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MasterViewController</span>: <span class="title">UITableViewController</span>, <span class="title">LoginViewDelegate</span>,     </span><br><span class="line">  <span class="title">SFSafariViewControllerDelegate</span> </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> safariViewController: <span class="type">SFSafariViewController</span>?</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样我们就可以创建该视图控制器，并显示:<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">didTapLoginButton</span><span class="params">()</span></span> &#123; </span><br><span class="line">  <span class="keyword">self</span>.dismissViewControllerAnimated(<span class="literal">false</span>, completion: <span class="literal">nil</span>)</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> authURL = <span class="type">GitHubAPIManager</span>.sharedInstance.<span class="type">URLToStartOAuth2Login</span>() &#123; </span><br><span class="line">    safariViewController = <span class="type">SFSafariViewController</span>(<span class="type">URL</span>: authURL) </span><br><span class="line">    safariViewController?.delegate = <span class="keyword">self</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> webViewController = safariViewController &#123;</span><br><span class="line">      <span class="keyword">self</span>.presentViewController(webViewController, animated: <span class="literal">true</span>, completion: <span class="literal">nil</span>) </span><br><span class="line">    &#125;</span><br><span class="line">  &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后确保网页进行加载，如果加载失败，我们将销毁并返回：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MARK: - Safari View Controller Delegate</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">safariViewController</span><span class="params">(controller: SFSafariViewController, </span><br><span class="line">  didCompleteInitialLoad didLoadSuccessfully: Bool)</span></span> &#123;</span><br><span class="line">  <span class="comment">// Detect not being able to load the OAuth URL</span></span><br><span class="line">  <span class="keyword">if</span> (!didLoadSuccessfully) &#123;</span><br><span class="line">    <span class="comment">// <span class="doctag">TODO:</span> handle this better</span></span><br><span class="line">    controller.dismissViewControllerAnimated(<span class="literal">true</span>, completion: <span class="literal">nil</span>) </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>后面如果用户完成了登录，我们也会销毁该视图。</p>
+<p>那么这里当我们使用<code>UIApplication.sharedApplication().openURL(authURL)</code>为用户打开Safari，并让他们使用GitHub帐号来认证时会显示界面如下：</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_320.png?imageView2/0/w/480" style="width:320px"><br></div>
+
+
+<p>所以注意第一步。当我们点击<code>Authorize</code>按钮时我们将得到一个错误：</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_330.png?imageView2/0/w/480" style="width:240px"><br></div>
+
+<p>这是因为当用户认证后GitHub将尝试使用我们给出的回调URL<code>grokGitHub://?aParam=paramVal</code>进行回调。但iOS根本不知道如何处理<code>grokGitHub://</code>URL。因此我们必须告诉iOS，我们的APP将会处理这些以<code>grokGitHub://</code>开头的URL。</p>
+<h4 id="第二步：处理GitHub回调"><a href="#第二步：处理GitHub回调" class="headerlink" title="第二步：处理GitHub回调"></a>第二步：处理GitHub回调</h4><p>在iOS中，任何APP都可以注册一个URL方案。也就是说，我们会告诉操作系统我们的APP将会处理<code>grokGitHub://</code>开头的URL。这样，GitHub能够将用户重定位回我们的APP并返回一个验证码，后面可以根据该验证码来换取访问令牌。</p>
+<blockquote>
+<p>为什么我们需要先得到一个码然后再换取令牌，而不是直接获取令牌？不知道你是否注意到第一个步骤中<code>state</code>参数。这样实现是为了安全。我们发送一个<code>state</code>参数，并确保我们得到了返回。如果我们没有得到返回，那么我们可以终止OAuth认证流程，这样访问令牌就不会生成。那么再使用第二步就可以确保是我们自己发送的，而不是一个随机的人或者机器尝试获取我们的GitHub账户信息。</p>
+</blockquote>
+<p>要注册一个自定义URL方案，我们需要打开工程中的<code>info.plist</code>文件：</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_340.png?imageView2/0/w/480" style="width:480px"><br></div>
+
+<p>右击并选择<code>Add Row</code>：</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_350.png?imageView2/0/w/480" style="width:360px"><br></div><br>将标识符(identifier)更该为:<code>URL types</code>:<br><div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_360.png?imageView2/0/w/480" style="width:240px"><br></div>
+
+<p>将类型更改为<code>Array</code>并添加一个子行(sub-row)<code>Item 0</code>并包含<code>URL identifier</code>:</p>
+<div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_370.png?imageView2/0/w/480" style="width:480px"><br></div><br>URL标识符(URL identifier)必须唯一。最好的方法就是你的APP ID：<br><div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_380.png?imageView2/0/w/480" style="width:480px"><br></div><br>在<code>Item 0</code>中右击并在下面添加一行，名称为：<code>URL Schemes</code>:<br><div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_390.png?imageView2/0/w/480" style="width:480px"><br></div><br>设置<code>URL Schemes</code>的<code>Item 0</code>为你的URL方案，并且不包含<code>://</code>(设置为：<code>grokGitHub</code>，而不是<code>grokGitHub://</code>):<br><div style="text-align: center"><br><img src="http://o6pjjbgcb.bkt.clouddn.com/rest_400.png?imageView2/0/w/480" style="width:480px"><br></div>
+
+<p>然后切换回<code>AppDelegate</code>文件并添加<code>application:handleOpenURL</code>函数，使得我们可以处理我们需要打开的URL(你可以把Xcode所产生的代码都删除，只保留下面这些)：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> UIKit</span><br><span class="line"><span class="meta">@UIApplicationMain</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AppDelegate</span>: <span class="title">UIResponder</span>, <span class="title">UIApplicationDelegate</span>, <span class="title">ISplitViewControllerDelegate</span> </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> window: <span class="type">UIWindow</span>?</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">func</span> <span class="title">application</span><span class="params">(application: UIApplication, didFinishLaunchingWithOptions launchOptions: </span><br><span class="line">    [NSObject: AnyObject]?)</span></span> -&gt; <span class="type">Bool</span> &#123;</span><br><span class="line">    <span class="comment">// Override point for customization after application launch.</span></span><br><span class="line">    <span class="keyword">let</span> splitViewController = <span class="keyword">self</span>.window!.rootViewController <span class="keyword">as</span>! <span class="type">UISplitViewController</span> </span><br><span class="line">    <span class="keyword">let</span> navigationController = splitViewController.viewControllers[</span><br><span class="line">      splitViewController.viewControllers.<span class="built_in">count</span>-<span class="number">1</span>] <span class="keyword">as</span>! <span class="type">UINavigationController</span> </span><br><span class="line">    navigationController.topViewController!.navigationItem.leftBarButtonItem</span><br><span class="line">      = splitViewController.displayModeButtonItem() </span><br><span class="line">    splitViewController.delegate = <span class="keyword">self</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">func</span> <span class="title">application</span><span class="params">(application: UIApplication, handleOpenURL url: NSURL)</span></span> -&gt; <span class="type">Bool</span> &#123; </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// MARK: - Split view</span></span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">func</span> <span class="title">splitViewController</span><span class="params">(splitViewController: UISplitViewController, </span><br><span class="line">    collapseSecondaryViewController secondaryViewController:UIViewController, </span><br><span class="line">    ontoPrimaryViewController primaryViewController:UIViewController)</span></span> -&gt; <span class="type">Bool</span> &#123;</span><br><span class="line">    <span class="keyword">guard</span> <span class="keyword">let</span> secondaryAsNavController = secondaryViewController <span class="keyword">as</span>? </span><br><span class="line">      <span class="type">UINavigationController</span> <span class="keyword">else</span> &#123; <span class="keyword">return</span> <span class="literal">false</span> &#125;</span><br><span class="line">    <span class="keyword">guard</span> <span class="keyword">let</span> topAsDetailController = secondaryAsNavController.topViewController <span class="keyword">as</span>? </span><br><span class="line">      <span class="type">DetailViewController</span> <span class="keyword">else</span> &#123; <span class="keyword">return</span> <span class="literal">false</span> &#125;</span><br><span class="line">    <span class="keyword">if</span> topAsDetailController.detailItem == <span class="literal">nil</span> &#123;</span><br><span class="line">      <span class="comment">// Return true to indicate that we have handled the collapse by doing nothing  </span></span><br><span class="line">      <span class="comment">// the secondary controller will be discarded.</span></span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">  &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这就是自定义URL方案所需要的全部。现在可以启动APP进行测试了。APP将先带你去Safari进行认证，然后再返回我们的APP。如果你测试有问题，重新设置一下GitHub访问，<a href="https://github.com/settings/applications" target="_blank" rel="external">Authorized Applications tab</a>，这样就可以重新进行认证了。我们后面将修改代码这样就不用每次启动APP的时打开Safari进行验证了，但现在为了测试自定义URL方案可以执行先不管这些。</p>
+<h4 id="第三步：换取访问令牌-Token"><a href="#第三步：换取访问令牌-Token" class="headerlink" title="第三步：换取访问令牌(Token)"></a>第三步：换取访问令牌(Token)</h4><p>当GitHub回调我们自定义的URL时回传回一个码。我们需要处理该URL并解析出该码，然后使用该码去换取OAuth访问令牌。首先我们需要把传回的URL交给<code>GitHubAPIManager</code>，因为它来负责这些事项。因此我们需要修改<code>AppDelegate</code>中的函数：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">application</span><span class="params">(application: UIApplication, handleOpenURL url: NSURL)</span></span> -&gt; <span class="type">Bool</span> &#123; </span><br><span class="line">  <span class="type">GitHubAPIManager</span>.sharedInstance.processOAuthStep1Response(url)</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后在<code>GitHubAPIManager</code>中实现<code>processOAuthStep1Response</code>:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GitHubAPIManager</span> </span><br><span class="line"></span>&#123;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">let</span> sharedInstance = <span class="type">GitHubAPIManager</span>() </span><br><span class="line">  ...</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">func</span> <span class="title">processOAuthStep1Response</span><span class="params">(url: NSURL)</span></span> </span><br><span class="line">  &#123;    </span><br><span class="line">    <span class="comment">// <span class="doctag">TODO:</span> implement</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们接收的URL格式如下：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grokgithub:<span class="comment">//?aParam=paramVal&amp;code=123456789&amp;state=TEST_STATE</span></span><br></pre></td></tr></table></figure>
+<p><em>不相信我，你可以在<code>processOAuthStep1Response</code>中打印出来看看。</em></p>
+<p>我们所需要解析的就是<code>code</code>参数。幸运的是，iOS中提供了工具来解析URL组件，并能够访问它们的名称和值：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">processOAuthStep1Response</span><span class="params">(url: NSURL)</span></span> &#123;</span><br><span class="line">  <span class="keyword">let</span> components = <span class="type">NSURLComponents</span>(<span class="type">URL</span>: url, resolvingAgainstBaseURL: <span class="literal">false</span>) </span><br><span class="line">  <span class="keyword">var</span> code:<span class="type">String</span>?</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> queryItems = components?.queryItems &#123;</span><br><span class="line">    <span class="keyword">for</span> queryItem <span class="keyword">in</span> queryItems &#123;</span><br><span class="line">      <span class="keyword">if</span> (queryItem.name.lowercaseString == <span class="string">"code"</span>) &#123;</span><br><span class="line">        code = queryItem.value</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因此，我们将URL转换为<code>queryItems</code>数组(它们每一个都有一个名称和值)，然后我们将循环它们，直到找到一个名称为<code>code</code>的项，然后获取它的值。</p>
+<p>当我们获取码后，我们就可以通过Alamofire的请求来获取OAuth访问令牌。<a href="https://developer.github.com/v3/oauth/#github-redirects-back-to-your-site" target="_blank" rel="external">GitHub docs</a>中指出<code>POST</code>的地址为：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/login/oauth/access_token</span><br></pre></td></tr></table></figure>
+<p>参数为<code>client ID</code>、<code>client secret</code>及我们刚刚解析得到的码。我们将在报头中来指定这些参数，并返回JSON格式数据：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> receivedCode = code &#123;</span><br><span class="line">  <span class="keyword">let</span> getTokenPath:<span class="type">String</span> = <span class="string">"https://github.com/login/oauth/access_token"</span> </span><br><span class="line">  <span class="keyword">let</span> tokenParams = [<span class="string">"client_id"</span>: clientID, <span class="string">"client_secret"</span>: clientSecret,</span><br><span class="line">    <span class="string">"code"</span>: receivedCode]</span><br><span class="line">  <span class="keyword">let</span> jsonHeader = [<span class="string">"Accept"</span>: <span class="string">"application/json"</span>] </span><br><span class="line">  <span class="type">Alamofire</span>.request(.<span class="type">POST</span>, getTokenPath, parameters: tokenParams,</span><br><span class="line">    headers: jsonHeader) </span><br><span class="line">    .responseString &#123; response <span class="keyword">in</span></span><br><span class="line">      <span class="comment">// <span class="doctag">TODO:</span> handle response to extract OAuth token</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一旦我们得到了响应，我们就进行检查是否有错误(如果有我们将退出)并查看返回的结果样式然后找出如何解析OAuth认证令牌(这里假设没有错误):</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> error = response.result.error &#123; </span><br><span class="line">  <span class="built_in">print</span>(rror)</span><br><span class="line">  <span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">print</span>(response.result.value)</span><br><span class="line"><span class="comment">// like "access_token=999999&amp;scope=gist&amp;token_type=bearer"</span></span><br></pre></td></tr></table></figure>
+<p>如果我们得到了OAuth访问令牌，我们将存储它。在这里，我们将把它存放到<code>GitHubAPIManager</code>的一个变量中。后面我们在把它持久化并进行加密存储，使得可以在多次运行中可以使用：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GitHubAPIManager</span> </span><br><span class="line"></span>&#123;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">let</span> sharedInstance = <span class="type">GitHubAPIManager</span>()</span><br><span class="line">  <span class="keyword">var</span> <span class="type">OAuthToken</span>: <span class="type">String</span>?</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>为了解析OAuth令牌，我们将遍历返回中的每个参数：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> receivedResults = response.result.value, jsonData = </span><br><span class="line">  receivedResults.dataUsingEncoding(<span class="type">NSUTF8StringEncoding</span>, allowLossyConversion: <span class="literal">false</span>) &#123; </span><br><span class="line">  <span class="keyword">let</span> jsonResults = <span class="type">JSON</span>(data: jsonData)</span><br><span class="line">  <span class="keyword">for</span> (key, value) <span class="keyword">in</span> jsonResults &#123;</span><br><span class="line">    <span class="keyword">switch</span> key &#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="string">"access_token"</span>:</span><br><span class="line">        <span class="keyword">self</span>.<span class="type">OAuthToken</span> = value.string </span><br><span class="line">      <span class="keyword">case</span> <span class="string">"scope"</span>:</span><br><span class="line">         <span class="comment">// <span class="doctag">TODO:</span> verify scope</span></span><br><span class="line">         <span class="built_in">print</span>(<span class="string">"SET SCOPE"</span>) </span><br><span class="line">      <span class="keyword">case</span> <span class="string">"token_type"</span>:</span><br><span class="line">         <span class="comment">// <span class="doctag">TODO:</span> verify is bearer</span></span><br><span class="line">         <span class="built_in">print</span>(<span class="string">"CHECK IF BEARER"</span>) </span><br><span class="line">      <span class="keyword">default</span>:</span><br><span class="line">         <span class="built_in">print</span>(<span class="string">"got more than I expected from the OAuth token exchange"</span>)</span><br><span class="line">         <span class="built_in">print</span>(key) </span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当我们将返回的结果转换为JSON后，我们将遍历每一个<code>key-value</code>值对并找出对应的处理方式。为了方便理解，我这里先把每一个需要处理的增加一个<code>TODO</code>标识，但实际上这里我们不需要每个都实现。如果你打算把这个部署到你的APP中，你必须确定你得到了正确类型的令牌及响应类型的<code>scope</code>。</p>
+<p>好了，我们现在得到了OAuth令牌并保存(如果我们得到了的话)：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">self</span>.<span class="type">OAuthToken</span> = value</span><br></pre></td></tr></table></figure>
+<p>现在我们就可以来获取我们所关注的gists：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> receivedCode = code &#123;</span><br><span class="line">  <span class="keyword">let</span> getTokenPath:<span class="type">String</span> = <span class="string">"https://github.com/login/oauth/access_token"</span> </span><br><span class="line">  <span class="keyword">let</span> tokenParams = [<span class="string">"client_id"</span>: clientID, <span class="string">"client_secret"</span>: clientSecret,</span><br><span class="line">    <span class="string">"code"</span>: receivedCode]</span><br><span class="line">  <span class="keyword">let</span> jsonHeader = [<span class="string">"Accept"</span>: <span class="string">"application/json"</span>] </span><br><span class="line">  <span class="type">Alamofire</span>.request(.<span class="type">POST</span>, getTokenPath, parameters: tokenParams,</span><br><span class="line">    headers: jsonHeader) </span><br><span class="line">    .responseString &#123; response <span class="keyword">in</span></span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">let</span> error = response.result.error &#123; </span><br><span class="line">        <span class="built_in">print</span>(error)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="built_in">print</span>(response.result.value)</span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">let</span> receivedResults = response.result.value, ... &#123;</span><br><span class="line">        ...</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">self</span>.hasOAuthToken()) &#123; </span><br><span class="line">        <span class="keyword">self</span>.printMyStarredGistsWithOAuth2()</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码看出问题了么？我们没有更新<code>self.hasOAuthToken()</code>以便反应我们是否真的得到一个令牌。最好赶快做，否则我们每次都会得到一个错误：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">hasOAuthToken</span><span class="params">()</span></span> -&gt; <span class="type">Bool</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> token = <span class="keyword">self</span>.<span class="type">OAuthToken</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> !token.isEmpty </span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在如果我们已经得到一个令牌，并且不为空，那么<code>hasOAuthToken()</code>将返回<code>true</code>。</p>
+<h3 id="4-处理多次运行"><a href="#4-处理多次运行" class="headerlink" title="4. 处理多次运行"></a>4. 处理多次运行</h3><p>现在我们运行这个APP会发生什么？嗯，每次当<code>MasterViewController</code>显示的时候：</p>
+<ul>
+<li>判断是否有OAuth令牌</li>
+<li>如果我们没有，那么会显示登录视图</li>
+<li>如果已经有了，那么将尝试获取我们收藏的Gists</li>
+</ul>
+<p>但是，在我们每次运行APP的时候<code>MasterViewController</code>都会显示，包括Safari使用我们自定义的URL方案重新打开了APP。问题就在于在这个时候我们有的是码，而不是访问令牌。因此登录视图每次都会显示。</p>
+<p>为了解决这个问题，我们可以检查我们是否已经启动了一个OAuth认证流程。因此，在当我们启动OAuth认证流程的时候，我们在<code>NSUserDefaults</code>中保存一个布尔值，来表明当前我们正在加载OAuth访问令牌：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">didTapLoginButton</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">let</span> defaults = <span class="type">NSUserDefaults</span>.standardUserDefaults() </span><br><span class="line">  defaults.setBool(<span class="literal">true</span>, forKey: <span class="string">"loadingOAuthToken"</span>)</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">self</span>.dismissViewControllerAnimated(<span class="literal">false</span>, completion: <span class="literal">nil</span>)</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> authURL = <span class="type">GitHubAPIManager</span>.sharedInstance.<span class="type">URLToStartOAuth2Login</span>() &#123;</span><br><span class="line">    safariViewController = <span class="type">SFSafariViewController</span>(<span class="type">URL</span>: authURL) </span><br><span class="line">    safariViewController?.delegate = <span class="keyword">self</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> webViewController = safariViewController &#123;</span><br><span class="line">      <span class="keyword">self</span>.presentViewController(webViewController, animated: <span class="literal">true</span>, completion: <span class="literal">nil</span>) </span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后，在当获取了OAuth访问令牌(或者我们调用失败的时候)将它设置为<code>false</code>。在我们获取一个没有码的URL时，在POST过程中遇到错误时，或者我们解析响应中的码并获取访问令牌后，需要对该标志进行设置。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">processOAuthStep1Response</span><span class="params">(url: NSURL)</span></span> &#123;</span><br><span class="line">  <span class="keyword">let</span> components = <span class="type">NSURLComponents</span>(<span class="type">URL</span>: url, resolvingAgainstBaseURL: <span class="literal">false</span>) </span><br><span class="line">  <span class="keyword">var</span> code:<span class="type">String</span>?</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> queryItems = components?.queryItems &#123;</span><br><span class="line">    <span class="keyword">for</span> queryItem <span class="keyword">in</span> queryItems &#123;</span><br><span class="line">      <span class="keyword">if</span> (queryItem.name.lowercaseString == <span class="string">"code"</span>) &#123;</span><br><span class="line">        code = queryItem.value</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> receivedCode = code &#123;</span><br><span class="line">    <span class="keyword">let</span> getTokenPath:<span class="type">String</span> = <span class="string">"https://github.com/login/oauth/access_token"</span> </span><br><span class="line">    <span class="keyword">let</span> tokenParams = [<span class="string">"client_id"</span>: clientID, <span class="string">"client_secret"</span>: clientSecret,</span><br><span class="line">      <span class="string">"code"</span>: receivedCode]</span><br><span class="line">    <span class="keyword">let</span> jsonHeader = [<span class="string">"Accept"</span>: <span class="string">"application/json"</span>]</span><br><span class="line">    <span class="type">Alamofire</span>.request(.<span class="type">POST</span>, getTokenPath, parameters: tokenParams, headers: jsonHeader)</span><br><span class="line">      .responseString &#123; response <span class="keyword">in</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> error = response.result.error &#123;</span><br><span class="line">          <span class="keyword">let</span> defaults = <span class="type">NSUserDefaults</span>.standardUserDefaults() </span><br><span class="line">          defaults.setBool(<span class="literal">false</span>, forKey: <span class="string">"loadingOAuthToken"</span>) </span><br><span class="line">          <span class="comment">// <span class="doctag">TODO:</span> bubble up error</span></span><br><span class="line">          <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">print</span>(response.result.value)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> receivedResults = response.result.value, jsonData =</span><br><span class="line">          receivedResults.dataUsingEncoding(<span class="type">NSUTF8StringEncoding</span>, </span><br><span class="line">            allowLossyConversion: <span class="literal">false</span>) &#123;</span><br><span class="line">          <span class="keyword">let</span> jsonResults = <span class="type">JSON</span>(data: jsonData) </span><br><span class="line">          <span class="keyword">for</span> (key, value) <span class="keyword">in</span> jsonResults &#123;</span><br><span class="line">            <span class="keyword">switch</span> key &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">"access_token"</span>:</span><br><span class="line">              <span class="keyword">self</span>.<span class="type">OAuthToken</span> = value.string </span><br><span class="line">            <span class="keyword">case</span> <span class="string">"scope"</span>:</span><br><span class="line">              <span class="comment">// <span class="doctag">TODO:</span> verify scope</span></span><br><span class="line">              <span class="built_in">print</span>(<span class="string">"SET SCOPE"</span>)</span><br><span class="line">            <span class="keyword">case</span> <span class="string">"token_type"</span>:</span><br><span class="line">              <span class="comment">// <span class="doctag">TODO:</span> verify is bearer</span></span><br><span class="line">              <span class="built_in">print</span>(<span class="string">"CHECK IF BEARER"</span>) </span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">              <span class="built_in">print</span>(<span class="string">"got more than I expected from the OAuth token exchange"</span>)</span><br><span class="line">              <span class="built_in">print</span>(key) </span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">self</span>.hasOAuthToken()) &#123; </span><br><span class="line">          <span class="keyword">self</span>.printMyStarredGistsWithOAuth2()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个的确变得有点长。那么让我们将通过码来交换获取访问令牌剥离到它自己的方法中:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">swapAuthCodeForToken</span><span class="params">(receivedCode: String)</span></span> &#123;</span><br><span class="line">  <span class="keyword">let</span> getTokenPath:<span class="type">String</span> = <span class="string">"https://github.com/login/oauth/access_token"</span> </span><br><span class="line">  <span class="keyword">let</span> tokenParams = [<span class="string">"client_id"</span>: clientID, <span class="string">"client_secret"</span>: clientSecret,</span><br><span class="line">    <span class="string">"code"</span>: receivedCode]</span><br><span class="line">  <span class="keyword">let</span> jsonHeader = [<span class="string">"Accept"</span>: <span class="string">"application/json"</span>]</span><br><span class="line">  <span class="type">Alamofire</span>.request(.<span class="type">POST</span>, getTokenPath, parameters: tokenParams, headers: jsonHeader)</span><br><span class="line">    .responseString &#123; response <span class="keyword">in</span></span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">let</span> error = response.result.error &#123;</span><br><span class="line">        <span class="keyword">let</span> defaults = <span class="type">NSUserDefaults</span>.standardUserDefaults() </span><br><span class="line">        defaults.setBool(<span class="literal">false</span>, forKey: <span class="string">"loadingOAuthToken"</span>) </span><br><span class="line">        <span class="comment">// <span class="doctag">TODO:</span> bubble up error</span></span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="built_in">print</span>(response.result.value)</span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">let</span> receivedResults = response.result.value, jsonData =</span><br><span class="line">        receivedResults.dataUsingEncoding(<span class="type">NSUTF8StringEncoding</span>, </span><br><span class="line">        allowLossyConversion: <span class="literal">false</span>) &#123;</span><br><span class="line">        </span><br><span class="line">      <span class="keyword">let</span> jsonResults = <span class="type">JSON</span>(data: jsonData) </span><br><span class="line">      <span class="keyword">for</span> (key, value) <span class="keyword">in</span> jsonResults &#123;</span><br><span class="line">        <span class="keyword">switch</span> key &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">"access_token"</span>:</span><br><span class="line">          <span class="keyword">self</span>.<span class="type">OAuthToken</span> = value.string </span><br><span class="line">        <span class="keyword">case</span> <span class="string">"scope"</span>:</span><br><span class="line">          <span class="comment">// <span class="doctag">TODO:</span> verify scope</span></span><br><span class="line">          <span class="built_in">print</span>(<span class="string">"SET SCOPE"</span>) </span><br><span class="line">        <span class="keyword">case</span> <span class="string">"token_type"</span>:</span><br><span class="line">          <span class="comment">// <span class="doctag">TODO:</span> verify is bearer</span></span><br><span class="line">          <span class="built_in">print</span>(<span class="string">"CHECK IF BEARER"</span>) </span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">          <span class="built_in">print</span>(<span class="string">"got more than I expected from the OAuth token exchange"</span>)</span><br><span class="line">          <span class="built_in">print</span>(key) </span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">let</span> defaults = <span class="type">NSUserDefaults</span>.standardUserDefaults() </span><br><span class="line">    defaults.setBool(<span class="literal">false</span>, forKey: <span class="string">"loadingOAuthToken"</span>) </span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span>.hasOAuthToken()) &#123;</span><br><span class="line">      <span class="keyword">self</span>.printMyStarredGistsWithOAuth2() </span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">processOAuthStep1Response</span><span class="params">(url: NSURL)</span></span> &#123;</span><br><span class="line">  <span class="keyword">let</span> components = <span class="type">NSURLComponents</span>(<span class="type">URL</span>: url, resolvingAgainstBaseURL: <span class="literal">false</span>) </span><br><span class="line">  <span class="keyword">var</span> code:<span class="type">String</span>?</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> queryItems = components?.queryItems &#123;</span><br><span class="line">    <span class="keyword">for</span> queryItem <span class="keyword">in</span> queryItems &#123;</span><br><span class="line">      <span class="keyword">if</span> (queryItem.name.lowercaseString == <span class="string">"code"</span>) &#123;</span><br><span class="line">        code = queryItem.value</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> receivedCode = code &#123;</span><br><span class="line">    swapAuthCodeForToken(receivedCode) </span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// no code in URL that we launched with</span></span><br><span class="line">    <span class="keyword">let</span> defaults = <span class="type">NSUserDefaults</span>.standardUserDefaults()</span><br><span class="line">    defaults.setBool(<span class="literal">false</span>, forKey: <span class="string">"loadingOAuthToken"</span>) </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样我们就可以改变<code>MasterViewController</code>，在启动OAuth认证流程前判断是否我们是否已经是否已经拥有了一个OAuth访问令牌：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">viewDidAppear</span><span class="params">(animated: Bool)</span></span> &#123; </span><br><span class="line">  <span class="keyword">super</span>.viewDidAppear(animated)</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">let</span> defaults = <span class="type">NSUserDefaults</span>.standardUserDefaults() </span><br><span class="line">  <span class="keyword">if</span> (!defaults.boolForKey(<span class="string">"loadingOAuthToken"</span>)) &#123;</span><br><span class="line">    loadInitialData()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>并且我们需要在我们无法加载OAuth网页的时候进行更新：<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">safariViewController</span><span class="params">(controller: SFSafariViewController, </span><br><span class="line">  didCompleteInitialLoad didLoadSuccessfully: Bool)</span></span> &#123;</span><br><span class="line">  <span class="comment">// Detect not being able to load the OAuth URL</span></span><br><span class="line">  <span class="keyword">if</span> (!didLoadSuccessfully) &#123;</span><br><span class="line">    <span class="keyword">let</span> defaults = <span class="type">NSUserDefaults</span>.standardUserDefaults() </span><br><span class="line">    defaults.setBool(<span class="literal">false</span>, forKey: <span class="string">"loadingOAuthToken"</span>) </span><br><span class="line">    controller.dismissViewControllerAnimated(<span class="literal">true</span>, completion: <span class="literal">nil</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>NSUserDefault</code>是字典类型，可以用来在多次运行之间保存一些数据。它适合放比较小、无需加密的数据。</p>
+<h3 id="5-使用OAuth访问令牌进行API调用"><a href="#5-使用OAuth访问令牌进行API调用" class="headerlink" title="5. 使用OAuth访问令牌进行API调用"></a>5. 使用OAuth访问令牌进行API调用</h3><p>现在<em>终于</em>得到访问令牌了，那么该怎么使用它呢？这个需要在每次进行GitHub的API调用中设置到<code>Authorization</code>报头。</p>
+<p>使用Alamofire路由我们是很容易在API请求中包含这个报头的。只需要在返回<code>NSMutableURL</code>之前添加进去即可：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">GistRouter</span>: <span class="title">URLRequestConvertible</span> </span>&#123; </span><br><span class="line">  ...</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">var</span> <span class="type">URLRequest</span>: <span class="type">NSMutableURLRequest</span> &#123; </span><br><span class="line">    ...</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> <span class="type">URL</span> = <span class="type">NSURL</span>(string: <span class="type">GistRouter</span>.baseURLString)!</span><br><span class="line">    <span class="keyword">let</span> <span class="type">URLRequest</span> = <span class="type">NSMutableURLRequest</span>(<span class="type">URL</span>: <span class="type">URL</span>.<span class="type">URLByAppendingPathComponent</span>(result.path))</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Set OAuth token if we have one</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> token = <span class="type">GitHubAPIManager</span>.sharedInstance.<span class="type">OAuthToken</span> &#123; </span><br><span class="line">      <span class="type">URLRequest</span>.setValue(<span class="string">"token \(token)"</span>, forHTTPHeaderField: <span class="string">"Authorization"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> encoding = <span class="type">Alamofire</span>.<span class="type">ParameterEncoding</span>.<span class="type">JSON</span></span><br><span class="line">    <span class="keyword">let</span> (encodedRequest, <span class="number">_</span>) = encoding.encode(<span class="type">URLRequest</span>, parameters: result.parameters)</span><br><span class="line">    </span><br><span class="line">    encodedRequest.<span class="type">HTTPMethod</span> = method.rawValue</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> encodedRequest </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但这里还有一个问题，我们并没有在APP多次运行期间保存该OAuth认证令牌，因此在每次启动APP的时候都会弹出登录视图。对于该值我们希望能够保存的更加安全一些，所以不会使用<code>NSUserDefaults</code>进行保存。</p>
+<h3 id="6-安全保存OAuth访问令牌"><a href="#6-安全保存OAuth访问令牌" class="headerlink" title="6. 安全保存OAuth访问令牌"></a>6. 安全保存OAuth访问令牌</h3><p>在iOS应用中能够安全保存数据的是<code>Keychain</code>。但是使用<code>Keychain</code>的代码是否非常丑陋的，因此我们打算使用另外一个非常友好的库<a href="https://github.com/matthewpalmer/Locksmith" target="_blank" rel="external">Locksmith</a>。</p>
+<p>使用CocoaPods将Locksmith v2.0添加到你的工程中。</p>
+<p>当你做完这些并重新打开Xcode时。在<code>GitHubAPIManager</code>的顶部添加<code>import Locksmith</code>:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Foundation</span><br><span class="line"><span class="keyword">import</span> Alamofire</span><br><span class="line"><span class="keyword">import</span> Locksmith</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GitHubAPIManager</span> </span>&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在我们可以使用Locksmith保存和获取OAuth访问令牌了：<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="type">OAuthToken</span>: <span class="type">String</span>? &#123; </span><br><span class="line">  <span class="keyword">set</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> valueToSave = newValue &#123; </span><br><span class="line">      <span class="keyword">do</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> <span class="type">Locksmith</span>.updateData([<span class="string">"token"</span>: valueToSave], forUserAccount: <span class="string">"github"</span>)</span><br><span class="line">      &#125; <span class="keyword">catch</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="number">_</span> = <span class="keyword">try</span>? <span class="type">Locksmith</span>.deleteDataForUserAccount(<span class="string">"github"</span>) </span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123; <span class="comment">// they set it to nil, so delete it</span></span><br><span class="line">      <span class="keyword">let</span> <span class="number">_</span> = <span class="keyword">try</span>? <span class="type">Locksmith</span>.deleteDataForUserAccount(<span class="string">"github"</span>) </span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">get</span> &#123;</span><br><span class="line">    <span class="comment">// try to load from keychain</span></span><br><span class="line">    <span class="type">Locksmith</span>.loadDataForUserAccount(<span class="string">"github"</span>)</span><br><span class="line">    <span class="keyword">let</span> dictionary = <span class="type">Locksmith</span>.loadDataForUserAccount(<span class="string">"github"</span>) </span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> token = dictionary?[<span class="string">"token"</span>] <span class="keyword">as</span>? <span class="type">String</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> token </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在上面这段代码中有些地方是值得我们解释一下的：</p>
+<p><code>newValue</code>是Swift在设置方法中传递过来的用户需要设置为的值。如果我们OAuth访问令牌的值为：<code>GitHubManager.sharedInstance().OAuthToken=&quot;abcd1234&quot;</code>。那么在<code>set</code>段落中<code>newValue</code>的值将会是<code>abcd1234</code>。</p>
+<p>我们在这里使用<code>Locksmith.updateData</code>那是因为如果我们在<code>Keychain</code>中已经有值的时候会保存新的值进取。假如，我们使用<code>Locksmith.saveData</code>，那么当在<code>Keychain</code>中已经有值的时候就会抛出一个错误，这当然不是我们所需要的。</p>
+<p>在Swift2.0中引入了<code>do-try-catch</code>。因为Locksmith中标识了<code>throws</code>，所以我们需要允许这种错误抛出。但有时候我们需要进行一些特殊处理，比如，当我们无法把新的值保存进取的时候，也要确保旧值也不可以使用。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">  <span class="keyword">try</span> <span class="type">Locksmith</span>.updateData([<span class="string">"token"</span>: valueToSave], forUserAccount: <span class="string">"github"</span>)</span><br><span class="line">&#125; <span class="keyword">catch</span> &#123;</span><br><span class="line">  <span class="comment">// Handle exception</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>并且大部分时候，我们希望我只需要能够执行该项动作而不想关心出了什么错误：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="number">_</span> = <span class="keyword">try</span>? <span class="type">Locksmith</span>.deleteDataForUserAccount(<span class="string">"github"</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="7-进行已认证调用"><a href="#7-进行已认证调用" class="headerlink" title="7. 进行已认证调用"></a>7. 进行已认证调用</h3><p>Ok，现在<code>GitHubAPIManager</code>已经修改完毕，但怎么样来使用呢？还记得之前的<code>printMyStarredGistWithOAuth2</code>函数么？</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">printMyStarredGistsWithOAuth2</span><span class="params">()</span></span> -&gt; <span class="type">Void</span> &#123; </span><br><span class="line">  alamofireManager.request(<span class="type">GistRouter</span>.<span class="type">GetMyStarred</span>())</span><br><span class="line">    .responseString &#123; response <span class="keyword">in</span></span><br><span class="line">      <span class="keyword">guard</span> response.result.error == <span class="literal">nil</span> <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(response.result.error!)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">let</span> receivedString = response.result.value &#123;</span><br><span class="line">        <span class="built_in">print</span>(receivedString)</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因为，我们在Alamofire的路由中已经使用了OAuth认证令牌，所以当我们调用<code>GistRouter.GetMyStarred()</code>也会自动添加。那么下面可以保存并测试。</p>
+<p>我们之前的付出现在终于有收获了，使得我们简单和优雅。只要是使用我们的路由(并且我们在请求OAuth的访问令牌指定了正确的scope)，那么都可以很方便的扩展这些需要OAuth访问令牌的API调用。</p>
+<blockquote>
+<p>构建你的工程并确保可以进行需要认证的调用。</p>
+</blockquote>
+<h3 id="8-这就是基于OAuth2-0的登录验证"><a href="#8-这就是基于OAuth2-0的登录验证" class="headerlink" title="8. 这就是基于OAuth2.0的登录验证"></a>8. 这就是基于OAuth2.0的登录验证</h3><p>我知道这个需要很多步骤。如果你在测试的时候遇到了什么问题，首先要做的就是撤销访问权，使得OAuth流程可以进行刷新。对于GitHub你可以参考<a href="https://github.com/settings/applications" target="_blank" rel="external">Authorized Appliations tab</a>。或许你还想在当<code>printMyStarredGistsWithOAuth2</code>调用失败时将OAuth访问令牌清除掉：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">printMyStarredGistsWithOAuth2</span><span class="params">()</span></span> -&gt; <span class="type">Void</span> &#123; </span><br><span class="line">  alamofireManager.request(.<span class="type">GET</span>, <span class="string">"https://api.github.com/gists/starred"</span>)</span><br><span class="line">    .responseString &#123; <span class="number">_</span>, <span class="number">_</span>, result <span class="keyword">in</span> </span><br><span class="line">      <span class="keyword">guard</span> result.error == <span class="literal">nil</span> <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(result.error) </span><br><span class="line">        <span class="type">GitHubAPIManager</span>.sharedInstance.<span class="type">OAuthToken</span> = <span class="literal">nil</span> </span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">let</span> receivedString = result.value &#123;</span><br><span class="line">        <span class="built_in">print</span>(receivedString)</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果你得到了一个认证鉴权错误的话，你可以使用<code>debugPrint</code>尝试把请求打印出来(也包含报头)来确认那里有问题：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">printMyStarredGistsWithOAuth2</span><span class="params">()</span></span> -&gt; <span class="type">Void</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> starredGistsRequest = alamofireManager.request(<span class="type">GistRouter</span>.<span class="type">GetMyStarred</span>())</span><br><span class="line">    .responseString &#123; <span class="number">_</span>, <span class="number">_</span>, result <span class="keyword">in</span></span><br><span class="line">      <span class="keyword">guard</span> result.error == <span class="literal">nil</span> <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(result.error) </span><br><span class="line">        <span class="type">GitHubAPIManager</span>.sharedInstance.<span class="type">OAuthToken</span> = <span class="literal">nil</span> </span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">let</span> receivedString = result.value &#123;</span><br><span class="line">        <span class="built_in">print</span>(receivedString)</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">debugPrint</span>(starredGistsRequest)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果你得到了其它的错误，你可以尝试iOS模拟器中的<code>Reset Content an Settings</code>选项重新获取一个初始的环境。或许你需要尝试前面所说的三种或更多方式来调适OAuth流程，直到我们已经确认所得到的令牌可以正常的工作。那么你或许不再关心这些代码。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ios/" rel="tag">#ios</a>
+          
+            <a href="/tags/swift/" rel="tag">#swift</a>
+          
+            <a href="/tags/REST/" rel="tag">#REST</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/02/appWithRest-10/" rel="next" title="iOS Apps with REST APIs(十) -- 基于OAuth2.0认证(下)">
+                <i class="fa fa-chevron-left"></i> iOS Apps with REST APIs(十) -- 基于OAuth2.0认证(下)
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/08/08/appWithRest-11/" rel="prev" title="iOS Apps with REST APIs(十一) -- 列表切换">
+                iOS Apps with REST APIs(十一) -- 列表切换 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/08/02/appWithRest-9/"
+     data-title="iOS Apps with REST APIs(九) -- 基于OAuth2.0认证(中)"
+     data-content=""
+     data-url="http://cd826.github.io/2016/08/02/appWithRest-9/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/08/02/appWithRest-9/"
+           data-title="iOS Apps with REST APIs(九) -- 基于OAuth2.0认证(中)" data-url="http://cd826.github.io/2016/08/02/appWithRest-9/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpg"
+               alt="cd826Dong" />
+          <p class="site-author-name" itemprop="name">cd826Dong</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">15</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#OAuth2-0"><span class="nav-number">1.</span> <span class="nav-text">OAuth2.0</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-获取OAuth访问令牌"><span class="nav-number">1.1.</span> <span class="nav-text">1. 获取OAuth访问令牌</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-登录视图"><span class="nav-number">1.2.</span> <span class="nav-text">2. 登录视图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-OAuth登录流程"><span class="nav-number">1.3.</span> <span class="nav-text">3. OAuth登录流程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#第一步：将用户重新定位到GitHub"><span class="nav-number">1.3.1.</span> <span class="nav-text">第一步：将用户重新定位到GitHub</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第二步：处理GitHub回调"><span class="nav-number">1.3.2.</span> <span class="nav-text">第二步：处理GitHub回调</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第三步：换取访问令牌-Token"><span class="nav-number">1.3.3.</span> <span class="nav-text">第三步：换取访问令牌(Token)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-处理多次运行"><span class="nav-number">1.4.</span> <span class="nav-text">4. 处理多次运行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-使用OAuth访问令牌进行API调用"><span class="nav-number">1.5.</span> <span class="nav-text">5. 使用OAuth访问令牌进行API调用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-安全保存OAuth访问令牌"><span class="nav-number">1.6.</span> <span class="nav-text">6. 安全保存OAuth访问令牌</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-进行已认证调用"><span class="nav-number">1.7.</span> <span class="nav-text">7. 进行已认证调用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-这就是基于OAuth2-0的登录验证"><span class="nav-number">1.8.</span> <span class="nav-text">8. 这就是基于OAuth2.0的登录验证</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">cd826Dong</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"cd826"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>
